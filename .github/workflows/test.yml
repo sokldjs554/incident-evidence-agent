@@ -1,0 +1,36 @@
+name: Test
+
+on: [push, pull_request]
+
+permissions:
+  contents: read
+
+jobs:
+  pytest:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      FIVEWHYS_REVISION: ${{ github.sha }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify the operator capture tool
+        run: python -m unittest discover -s scripts -p test_record_claude.py -v
+      - name: Start the demo stack
+        run: docker compose up -d --build --wait --wait-timeout 240
+      - name: Run the unit and service-backed tests
+        run: |
+          install -d -m 0777 "$RUNNER_TEMP/fivewhys-pytest"
+          docker compose run --build --rm -v "$RUNNER_TEMP/fivewhys-pytest:/reports" test -o junit_family=xunit1 --junitxml=/reports/pytest.xml
+      - name: Publish per-test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pytest-results
+          path: ${{ runner.temp }}/fivewhys-pytest/pytest.xml
+          if-no-files-found: ignore
+      - name: Show service logs on failure
+        if: failure()
+        run: docker compose logs --no-color --tail=120
+      - name: Stop the demo stack
+        if: always()
+        run: docker compose down --volumes
