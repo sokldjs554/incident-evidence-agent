@@ -2,7 +2,7 @@
 
 운영자가 사건을 의뢰하면 FastAPI가 작업 ID를 발급한다. 워커는 요청한 팀이 볼 수 있는 관측 로그, 변경 이력, 과거 장애 보고서를 조사한다. 면접관은 브라우저에서 원인 후보를 선택해 **어떤 로그와 배포, 어느 문서의 몇 번째 줄이 그 판단을 뒷받침했는지** 확인할 수 있다.
 
-[데모 원본](https://github.com/sokldjs554/incident-evidence-agent/tree/gh-pages) · [이전 공개 데모](https://sokldjs554.github.io/five-whys-agent/) · [실제 Claude 조사 기록](docs/verification/claude/runs/e09c4226-20bf-462f-a673-c5dab75a9f7d/README.md) · [백엔드 구현](src/fivewhys/investigation/) · [통합 테스트 결과](docs/verification/RESULTS.md)
+[공개 데모](https://sokldjs554.github.io/incident-evidence-agent/) · [실제 Claude 조사](https://sokldjs554.github.io/incident-evidence-agent/claude.html) · [백엔드 구현](src/fivewhys/investigation/) · [통합 테스트 결과](docs/verification/RESULTS.md)
 
 플랫폼팀 실제 조사에서 Claude는 배포와 로그 5건을 인용했습니다. 같은 작업을 재전송해도 분석은 1회, 호출은 2회였습니다. [최종 판단·원문·콜백 기록](docs/verification/claude/runs/e09c4226-20bf-462f-a673-c5dab75a9f7d/README.md) 공개 데모에 저장된 주문팀·플랫폼팀 기록은 규칙 엔진으로 생성했습니다. [실행 절차](docs/verification/claude/README.md) · [원문 대조 기준](docs/verification/order-evidence-rubric.md) · [두 사건의 검색 평가](docs/verification/TWO_CASE_RETRIEVAL.md)
 
