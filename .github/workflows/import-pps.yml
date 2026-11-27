@@ -1,0 +1,14 @@
+name: Import PPS project
+on: push
+permissions:
+  contents: write
+jobs:
+  import:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Import the backend and demo histories
+        run: |
+          git fetch https://github.com/sokldjs554/five-whys-agent.git f8c8e20e848b568b9a1bca9a25168758323b14c2 da2d4a410b16be4fce4a159b68bd6792dd1ce72a
+          git push --atomic origin f8c8e20e848b568b9a1bca9a25168758323b14c2:refs/heads/demo/incident-backend da2d4a410b16be4fce4a159b68bd6792dd1ce72a:refs/heads/gh-pages
