@@ -1,0 +1,54 @@
+{
+  "report_id": "f6699a89",
+  "scenario": "db_pool_exhaustion",
+  "engine": "scripted",
+  "n_turns": 5,
+  "report": {
+    "summary": "장애 구간에 api-gateway에서 'Upstream timeout: order-service GET <*> exceeded <NUM>, responding <NUM>' 등 오류 응답이 급증했다. 인과 추적 결과 출발점은 order-service로 판단된다.",
+    "five_whys": [
+      {
+        "question": "왜 사용자 요청에 문제가 생겼는가?",
+        "answer": "api-gateway에서 'Upstream timeout: order-service GET <*> exceeded <NUM>, responding <NUM>' 패턴이 급증했다 (장애 구간 48건, 베이스라인 0건).",
+        "evidence_log_ids": [
+          1913,
+          1916,
+          1925
+        ]
+      },
+      {
+        "question": "왜 api-gateway의 처리에 문제가 생겼는가?",
+        "answer": "order-service에서 'HikariPool-1 - Connection is not available, request timed out after <NUM>' 패턴이 급증했다 (장애 구간 58건, 베이스라인 0건).",
+        "evidence_log_ids": [
+          1819,
+          1821,
+          1823
+        ]
+      },
+      {
+        "question": "왜 order-service에서 이 문제가 시작됐는가?",
+        "answer": "장애 직전 변경이 있었다: order-service v2.4.0 배포 — 주문 조회 쿼리 리팩터링 (customer_ref 조건 추가) (2026-07-03T13:20:00+09:00)",
+        "evidence_log_ids": []
+      }
+    ],
+    "root_cause": "order-service에서 'HikariPool-1 - Connection is not available, request timed out after <NUM>' 패턴이 장애의 출발점이다. 트리거는 변경 'order-service v2.4.0 배포 — 주문 조회 쿼리 리팩터링 (customer_ref 조건 추가)'로 판단된다.",
+    "root_cause_service": "order-service",
+    "culprit_change": "order-service v2.4.0 배포 — 주문 조회 쿼리 리팩터링 (customer_ref 조건 추가)",
+    "remediation": [
+      "원인 배포 롤백 및 신규 쿼리에 인덱스 추가",
+      "커넥션 풀 사용률 임계 알람 추가",
+      "슬로우 쿼리 자동 감지 및 배포 게이트 연동"
+    ],
+    "similar_incident": "2025-11-14-db-connection-pool",
+    "confidence": 0.6
+  },
+  "scores": {
+    "root_service_correct": true,
+    "root_cause_keyword_hit": true,
+    "culprit_applicable": true,
+    "culprit_identified": true,
+    "evidence_precision": 1.0,
+    "evidence_count": 6,
+    "whys_depth": 3,
+    "predicted_service": "order-service"
+  }
+}

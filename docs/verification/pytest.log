@@ -1,0 +1,45 @@
+ Container five-whys-agent-postgres-1  Running
+ Container five-whys-agent-rabbitmq-1  Running
+ Container five-whys-agent-milvus-1  Running
+ Container five-whys-agent-receiver-1  Running
+ Container five-whys-agent-neo4j-1  Running
+ Container five-whys-agent-worker-1  Running
+ Container five-whys-agent-api-1  Running
+ Container five-whys-agent-milvus-1  Waiting
+ Container five-whys-agent-neo4j-1  Waiting
+ Container five-whys-agent-postgres-1  Waiting
+ Container five-whys-agent-neo4j-1  Healthy
+ Container five-whys-agent-milvus-1  Healthy
+ Container five-whys-agent-index-seed-1  Starting
+ Container five-whys-agent-postgres-1  Healthy
+ Container five-whys-agent-index-seed-1  Started
+ Container five-whys-agent-index-seed-1  Waiting
+ Container five-whys-agent-postgres-1  Waiting
+ Container five-whys-agent-rabbitmq-1  Waiting
+ Container five-whys-agent-receiver-1  Waiting
+ Container five-whys-agent-index-seed-1  Waiting
+ Container five-whys-agent-postgres-1  Waiting
+ Container five-whys-agent-rabbitmq-1  Waiting
+ Container five-whys-agent-postgres-1  Healthy
+ Container five-whys-agent-rabbitmq-1  Healthy
+ Container five-whys-agent-receiver-1  Healthy
+ Container five-whys-agent-postgres-1  Healthy
+ Container five-whys-agent-rabbitmq-1  Healthy
+ Container five-whys-agent-index-seed-1  Exited
+ Container five-whys-agent-index-seed-1  Exited
+........................................................................ [ 64%]
+........................................                                 [100%]
+=============================== warnings summary ===============================
+tests/test_investigation_flow.py::test_callback_retry_reuses_same_result_and_positive_model_count
+tests/test_investigation_flow.py::test_forged_model_citations_fail_after_one_repair[invalid]
+tests/test_jobs_integration.py::test_lost_publication_confirmation_restart_and_retry
+tests/test_jobs_integration.py::test_lost_publication_confirmation_restart_and_retry
+tests/test_jobs_integration.py::test_lost_publication_confirmation_restart_and_retry
+tests/test_jobs_integration.py::test_worker_loss_after_provider_reservation_uses_failure_callback
+tests/test_jobs_integration.py::test_permanently_unavailable_callback_is_bounded
+tests/test_jobs_integration.py::test_crash_after_remote_acceptance_reuses_delivery_key
+  /workspace-src/fivewhys/investigation/worker.py:31: DeprecationWarning: BlockingConnection is deprecated and will be removed in Pika 2.0. Use Connection instead, which runs its own IOLoop on a background thread and provides a thread-safe blocking API that does not stall heartbeats on slow message processing. See https://pika.github.io/pika/latest/modules/adapters/thread_safe/
+    return pika.BlockingConnection(params)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+112 passed, 8 warnings in 36.94s

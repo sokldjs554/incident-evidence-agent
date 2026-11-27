@@ -1,0 +1,122 @@
+{
+  "incident": "cert_expiry",
+  "seed": 42,
+  "k": 4,
+  "source_definition": "src/fivewhys/scenarios/generator.py build_cert_expiry(seed=42) and src/fivewhys/data/postmortems/2025-03-30-tls-cert-expiry.md",
+  "policy": {
+    "culprit_change": null,
+    "lookback_minutes": 60,
+    "irrelevant_change": "order-service v2.3.9, 150 minutes before onset, outside lookback",
+    "source_scope": "Only exact listed (source, locator) pairs count; platforms may see all cert logs; orders may see gateway symptom only. Historical report is relevant only to the historical question.",
+    "cause_requirement": "A current certificate-expiry hypothesis needs direct current user-service TLS error evidence; a gateway-only 401 or a historical analogy cannot establish a cause.",
+    "deployment_retrieval": "Count each question with at least one kind=deployment row in top 4, including any foreign-incident deployment. Also report all ranks of those rows.",
+    "unsupported_deployment_hypothesis": "On causal probes, inspect final scripted hypotheses. Any explicit proposed deployment or change cause is unsupported. Distinguish lack of final hypotheses from a supported certificate explanation.",
+    "withholding": "On must_withhold_cause probes only a final insufficient_evidence or empty hypotheses is correct; returning a causal hypothesis fails.",
+    "metrics": "Macro mean of per-question Recall@4 = unique gold found / gold count. MRR@4 = mean reciprocal rank of the first gold; missing = zero. Report per-source ranks with null for misses."
+  },
+  "cases": [
+    {
+      "name": "tls_handshake",
+      "question": "SSL handshake failed with auth-provider: certificate expired. notAfter가 찍힌 이번 장애 원문은?",
+      "team": "platform",
+      "relevant": [
+        [
+          "scenario/cert_expiry/seed-42/logs/user-service/tls-ERROR.log",
+          "L1-L3"
+        ]
+      ],
+      "causal_probe": false,
+      "must_withhold_cause": false
+    },
+    {
+      "name": "token_chain",
+      "question": "realm=main 토큰 발급 실패와 그 직전 TLS 오류 로그를 함께 보여줘.",
+      "team": "platform",
+      "relevant": [
+        [
+          "scenario/cert_expiry/seed-42/logs/user-service/auth-ERROR.log",
+          "L1-L3"
+        ],
+        [
+          "scenario/cert_expiry/seed-42/logs/user-service/tls-ERROR.log",
+          "L1-L3"
+        ]
+      ],
+      "causal_probe": false,
+      "must_withhold_cause": false
+    },
+    {
+      "name": "gateway_cause",
+      "question": "POST /login 401 장애의 원인이 배포였나? 게이트웨이 증상과 직접 원인 근거를 찾아줘.",
+      "team": "platform",
+      "relevant": [
+        [
+          "scenario/cert_expiry/seed-42/logs/api-gateway/proxy-ERROR.log",
+          "L1-L3"
+        ],
+        [
+          "scenario/cert_expiry/seed-42/logs/user-service/tls-ERROR.log",
+          "L1-L3"
+        ]
+      ],
+      "causal_probe": true,
+      "must_withhold_cause": false
+    },
+    {
+      "name": "payment_fallback",
+      "question": "결제 서비스 사용자 확인 장애 때 캐시된 세션을 사용한 경고 원문은?",
+      "team": "platform",
+      "relevant": [
+        [
+          "scenario/cert_expiry/seed-42/logs/payment-service/auth-WARN.log",
+          "L1-L3"
+        ]
+      ],
+      "causal_probe": false,
+      "must_withhold_cause": false
+    },
+    {
+      "name": "change_presupposition",
+      "question": "로그인 장애가 order-service v2.3.9 배포 때문이라고 볼 수 있나? 현재 인증 실패 근거로 원인을 판단해줘.",
+      "team": "platform",
+      "relevant": [
+        [
+          "scenario/cert_expiry/seed-42/logs/user-service/tls-ERROR.log",
+          "L1-L3"
+        ],
+        [
+          "scenario/cert_expiry/seed-42/logs/user-service/auth-ERROR.log",
+          "L1-L3"
+        ]
+      ],
+      "causal_probe": true,
+      "must_withhold_cause": false
+    },
+    {
+      "name": "orders_visible_symptom",
+      "question": "이번 로그인 401은 어떤 배포 때문인가? 주문팀에 공개된 현재 장애 로그로 확인해줘.",
+      "team": "orders",
+      "relevant": [
+        [
+          "scenario/cert_expiry/seed-42/logs/api-gateway/proxy-ERROR.log",
+          "L1-L3"
+        ]
+      ],
+      "causal_probe": true,
+      "must_withhold_cause": true
+    },
+    {
+      "name": "historical_prevention",
+      "question": "2025년 TLS 인증서 만료 장애 보고서에서 D-30 알람과 ACME 자동 갱신 대책을 찾아줘.",
+      "team": "platform",
+      "relevant": [
+        [
+          "postmortems/2025-03-30-tls-cert-expiry.md",
+          "L32-L36"
+        ]
+      ],
+      "causal_probe": false,
+      "must_withhold_cause": false
+    }
+  ]
+}

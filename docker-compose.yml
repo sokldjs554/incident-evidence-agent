@@ -1,0 +1,202 @@
+x-app: &app
+  image: fivewhys-agent:local
+  pull_policy: never
+
+x-build-args: &build-args
+  FIVEWHYS_REVISION: ${FIVEWHYS_REVISION:-local}
+
+x-environment: &environment
+  DATABASE_URL: postgresql://fivewhys:fivewhys-demo@postgres:5432/fivewhys
+  RABBITMQ_URL: amqp://fivewhys:fivewhys-demo@rabbitmq:5672/
+  CALLBACK_URL: http://receiver:8080/callback
+  NEO4J_URI: bolt://neo4j:7687
+  NEO4J_USER: neo4j
+  NEO4J_PASSWORD: fivewhys-demo
+  MILVUS_URI: http://milvus:19530
+  FIVEWHYS_DEMO_ACCOUNTS: ${FIVEWHYS_DEMO_ACCOUNTS:-1}
+  NO_PROXY: &no-proxy localhost,127.0.0.1,api,receiver,milvus,neo4j,postgres,rabbitmq,${NO_PROXY:-}
+  no_proxy: *no-proxy
+
+x-runtime-environment: &runtime-environment
+  <<: *environment
+  ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
+  FIVEWHYS_MODEL: ${FIVEWHYS_MODEL:-claude-opus-5}
+
+services:
+  api:
+    <<: *app
+    build:
+      context: .
+      target: app
+      args: *build-args
+    environment:
+      <<: *runtime-environment
+      FIVEWHYS_ORDERS_TOKEN: ${FIVEWHYS_ORDERS_TOKEN:-}
+      FIVEWHYS_PLATFORM_TOKEN: ${FIVEWHYS_PLATFORM_TOKEN:-}
+      FIVEWHYS_SESSION_KEY: ${FIVEWHYS_SESSION_KEY:-}
+    ports:
+      - "127.0.0.1:${FIVEWHYS_API_PORT:-8750}:8000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+      index-seed:
+        condition: service_completed_successfully
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/v1/demo/config', timeout=3)"]
+      interval: 5s
+      timeout: 5s
+      retries: 12
+
+  worker:
+    <<: *app
+    command: ["python", "-m", "fivewhys.investigation.worker"]
+    restart: unless-stopped
+    environment:
+      <<: *runtime-environment
+      CALLBACK_URL: ${CALLBACK_URL:-http://receiver:8080/callback}
+      CALLBACK_RETRY_SECONDS: ${CALLBACK_RETRY_SECONDS:-180}
+    depends_on:
+      postgres:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+      receiver:
+        condition: service_healthy
+      index-seed:
+        condition: service_completed_successfully
+
+  receiver:
+    <<: *app
+    command: ["uvicorn", "fivewhys.investigation.receiver:app", "--host", "0.0.0.0", "--port", "8080"]
+    environment:
+      DATABASE_URL: postgresql://fivewhys:fivewhys-demo@postgres:5432/fivewhys
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8080/health', timeout=3)"]
+      interval: 5s
+      timeout: 5s
+      retries: 12
+
+  index-seed:
+    <<: *app
+    command: ["python", "-m", "fivewhys.investigation.retrieval"]
+    environment: *environment
+    depends_on:
+      milvus:
+        condition: service_healthy
+      neo4j:
+        condition: service_healthy
+
+  postgres:
+    image: postgres:16.11-bookworm
+    environment:
+      POSTGRES_DB: fivewhys
+      POSTGRES_USER: fivewhys
+      POSTGRES_PASSWORD: fivewhys-demo
+    volumes:
+      - postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD", "pg_isready", "-h", "127.0.0.1", "-U", "fivewhys", "-d", "fivewhys"]
+      interval: 5s
+      timeout: 5s
+      retries: 18
+
+  rabbitmq:
+    image: rabbitmq:4.1.6-management
+    environment:
+      RABBITMQ_DEFAULT_USER: fivewhys
+      RABBITMQ_DEFAULT_PASS: fivewhys-demo
+    hostname: rabbitmq
+    volumes:
+      - rabbitmq:/var/lib/rabbitmq
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "-q", "check_port_connectivity"]
+      interval: 5s
+      timeout: 5s
+      retries: 18
+
+  neo4j:
+    image: neo4j:5.26.17
+    environment:
+      NEO4J_AUTH: neo4j/fivewhys-demo
+      NEO4J_server_memory_heap_initial__size: 256m
+      NEO4J_server_memory_heap_max__size: 512m
+      NEO4J_server_memory_pagecache_size: 256m
+    volumes:
+      - neo4j:/data
+    healthcheck:
+      test: ["CMD", "cypher-shell", "-u", "neo4j", "-p", "fivewhys-demo", "RETURN 1"]
+      interval: 5s
+      timeout: 10s
+      retries: 24
+
+  milvus:
+    image: milvusdb/milvus:v2.6.4
+    command: ["milvus", "run", "standalone"]
+    environment:
+      ETCD_USE_EMBED: "true"
+      ETCD_DATA_DIR: /var/lib/milvus/etcd
+      ETCD_CONFIG_PATH: /milvus/configs/embedEtcd.yaml
+      COMMON_STORAGETYPE: local
+      DEPLOY_MODE: STANDALONE
+      HTTP_PROXY: ""
+      HTTPS_PROXY: ""
+      http_proxy: ""
+      https_proxy: ""
+      NO_PROXY: "*"
+      no_proxy: "*"
+    configs:
+      - source: milvus-etcd
+        target: /milvus/configs/embedEtcd.yaml
+    volumes:
+      - milvus:/var/lib/milvus
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://127.0.0.1:9091/healthz"]
+      interval: 5s
+      timeout: 5s
+      retries: 30
+
+  test:
+    profiles: [ci]
+    build:
+      context: .
+      target: testing
+      args: *build-args
+    environment:
+      <<: *environment
+      FIVEWHYS_INTEGRATION: "1"
+      FIVEWHYS_API_URL: http://api:8000
+    depends_on:
+      api:
+        condition: service_healthy
+      worker:
+        condition: service_started
+
+  elasticsearch:
+    profiles: [elasticsearch]
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.13.4
+    environment:
+      discovery.type: single-node
+      xpack.security.enabled: "false"
+      ES_JAVA_OPTS: -Xms512m -Xmx512m
+    ports:
+      - "127.0.0.1:9200:9200"
+
+configs:
+  milvus-etcd:
+    content: |
+      listen-client-urls: http://127.0.0.1:2379
+      advertise-client-urls: http://127.0.0.1:2379
+      quota-backend-bytes: 4294967296
+      auto-compaction-mode: revision
+      auto-compaction-retention: '1000'
+
+volumes:
+  postgres:
+  rabbitmq:
+  neo4j:
+  milvus:

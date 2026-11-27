@@ -1,0 +1,13 @@
+{
+  "root": {
+    "status": 404,
+    "response": {
+      "detail": "Not Found"
+    }
+  },
+  "openapi_paths": [
+    "/analyze",
+    "/reports/{report_id}",
+    "/scenarios"
+  ]
+}

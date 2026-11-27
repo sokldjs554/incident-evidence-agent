@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#132e2c">
+  <title>주문 서비스 응답 지연 · Five Whys</title>
+  <link rel="stylesheet" href="/assets/style.css">
+  <script src="/assets/app.js" defer></script>
+</head>
+<body>
+  <a class="skip" href="#main">본문 바로가기</a>
+  <header class="global-bar">
+    <div class="global-inner">
+      <a class="brand" href="#overview" lang="en" aria-label="Five Whys 조사 개요"><span class="brand-glyph" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span> Five Whys</a>
+      <span class="workspace-name">장애 조사 워크스페이스</span>
+      <div class="session" id="session-controls" hidden><label for="team">데모 계정</label><select id="team"><option value="orders">주문팀 · orders</option><option value="platform">플랫폼팀 · platform</option></select></div>
+    </div>
+  </header>
+  <main id="main" class="shell">
+    <section class="overview" id="overview" aria-labelledby="incident-title">
+      <div class="overview-copy">
+        <div class="case-label"><span class="case-dot"></span>장애 조사 <span class="slash">/</span> 합성 시나리오</div>
+        <h1 id="incident-title">주문 서비스 응답 지연</h1>
+        <p class="case-meta"><span class="service">order-service</span><span>2026년 7월 3일</span><span>14:00–14:15 KST</span></p>
+      </div>
+      <figure class="window">
+        <figcaption>로그 관측 구간 <span>KST</span></figcaption>
+        <div class="window-labels"><span>정상 구간 <b>60분</b></span><span>장애 <b>15분</b></span></div>
+        <div class="window-track" aria-hidden="true"><span></span><i></i></div>
+        <div class="window-times"><span>13:00</span><span>14:00</span><span>14:15</span></div>
+      </figure>
+    </section>
+
+    <nav class="section-nav" aria-label="조사 탐색">
+      <a href="#ask" aria-current="location">조사 질문</a><a href="#findings">가설과 근거</a><a href="#comparison">검색 비교</a><a href="#delivery">결과 전달</a>
+    </nav>
+
+    <div class="desk">
+      <div class="primary-column">
+        <section id="ask" class="panel ask-panel" aria-labelledby="ask-title">
+          <header class="panel-head"><h2 id="ask-title">조사 질문</h2></header>
+          <form id="ask-form">
+            <label class="visually-hidden" for="question">조사 질문</label>
+            <textarea id="question" name="question" required maxlength="2000" rows="2">배포 이후 주문 서비스의 응답이 느려졌다. 어떤 변경이 관련돼 있나?</textarea>
+            <div class="form-actions">
+              <label class="engine-label" for="engine">분석 엔진 <select id="engine"><option value="scripted">규칙 기반 · Scripted</option><option value="claude" disabled>Claude · 연결 확인 중</option></select></label>
+              <button class="primary" id="run" type="submit" disabled><i class="play-icon" aria-hidden="true"></i><span>조사 실행</span></button>
+            </div>
+            <p id="mode-note" class="note">실행 환경을 확인하고 있습니다.</p>
+          </form>
+          <p id="notice" role="status" hidden></p>
+          <button id="reconnect" type="button" class="secondary" hidden>다시 연결</button>
+        </section>
+
+        <section id="findings" class="panel" aria-labelledby="findings-title">
+          <header class="panel-head"><h2 id="findings-title">가설과 근거</h2></header>
+          <div id="hypotheses"><p class="empty">질문을 실행하면 원인 가설과 인용 근거를 볼 수 있습니다.</p></div>
+          <div class="timeline-block"><h3>사건 타임라인</h3><p class="sub">이번 조사에서 확인한 배포와 로그를 발생 시각순으로 표시합니다.</p><div id="timeline"><p class="empty small">확인한 사건이 아직 없습니다.</p></div></div>
+        </section>
+
+        <section id="comparison" class="panel" aria-labelledby="comparison-title">
+          <header class="panel-head"><h2 id="comparison-title">벡터 검색과 그래프 검색</h2></header>
+          <div id="compare-content"><p class="empty">조사 후 두 검색의 근거 순위와 그래프 경로를 비교할 수 있습니다.</p></div>
+        </section>
+      </div>
+
+      <aside class="side-column">
+        <section class="panel status-panel" aria-labelledby="status-title">
+          <header class="panel-head side-head"><h2 id="status-title">실행 현황</h2></header>
+          <div class="status-row"><span class="status-chip" id="status" role="status">실행 전</span><span class="engine-tag" id="engine-tag">Scripted</span></div>
+          <dl class="metrics"><div><dt>원인 가설</dt><dd id="hyp-count">—</dd></div><div><dt>확인한 근거</dt><dd id="ev-count">—</dd></div><div><dt>LLM 호출</dt><dd id="llm-count">—</dd></div></dl>
+          <a class="findings-jump" id="findings-jump" href="#findings" hidden>가설과 근거 보기 ↓</a>
+          <details class="technical" id="job-details"><summary>작업 세부 정보</summary><div id="job-info"><p class="sub">실행 후 작업 ID와 처리 상태를 확인할 수 있습니다.</p></div></details>
+        </section>
+
+        <section id="delivery" class="panel" aria-labelledby="delivery-title">
+          <header class="panel-head side-head"><h2 id="delivery-title">결과 전달</h2></header>
+          <p class="sub" id="delivery-help">데모 수신기는 첫 콜백을 거절합니다. 저장된 결과를 재전송하고 LLM 호출 수를 비교하세요.</p>
+          <div id="callback-status" class="delivery-state" role="status">전송 전</div>
+          <button class="secondary" type="button" id="retry" disabled>콜백 재전송</button>
+          <details class="technical" id="callback-details"><summary>전송 이력 <span id="callback-count">0</span></summary><div id="callback-history"><p class="sub">전송 기록이 아직 없습니다.</p></div></details>
+        </section>
+      </aside>
+    </div>
+    <footer><span lang="en">Five Whys</span><span>장애 조사 워크스페이스</span></footer>
+  </main>
+
+  <dialog id="source-dialog" aria-labelledby="source-heading">
+    <header class="source-top"><span>근거 원문</span><button class="close" id="source-close" aria-label="원문 닫기">×</button></header>
+    <h2 id="source-heading">근거 원문</h2>
+    <div id="source-content" aria-live="polite"></div>
+  </dialog>
+</body>
+</html>

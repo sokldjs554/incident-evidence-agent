@@ -1,0 +1,7 @@
+{
+  "official_messages_endpoint": true,
+  "configured_model": "claude-sonnet-5-5",
+  "source_revision": "b265ee8ee87a0d37720e64bc9451a3dd5aa01d75",
+  "sdk_version": "2.14.0",
+  "local_revision": "b265ee8ee87a0d37720e64bc9451a3dd5aa01d75"
+}

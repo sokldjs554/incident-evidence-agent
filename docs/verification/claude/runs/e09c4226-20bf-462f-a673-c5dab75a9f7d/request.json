@@ -1,0 +1,10 @@
+{
+  "at": "2026-11-25T09:29:46.105874+00:00",
+  "path": "/v1/analyses",
+  "capture_id": "8ff43744-2a66-4aef-b353-3a8ce13af091",
+  "body": {
+    "question": "배포 이후 주문 서비스의 응답이 느려졌다. 어떤 변경이 관련돼 있나?",
+    "engine": "claude",
+    "callback": true
+  }
+}

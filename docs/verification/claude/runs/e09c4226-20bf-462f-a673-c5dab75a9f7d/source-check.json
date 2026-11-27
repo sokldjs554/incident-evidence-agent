@@ -1,0 +1,47 @@
+[
+  {
+    "id": "ev-a70bed5eb45a4e77d9e9516a7c2a65b5",
+    "kind": "log",
+    "service": "api-gateway",
+    "source": "scenario/db_pool_exhaustion/seed-42/logs/api-gateway/proxy-ERROR.log",
+    "version": "sha256:e2a050a2aeb2278a9f238832490d439284de986a9303f33e45c174f522045a29",
+    "locator": "L1-L3",
+    "text": "2026-07-03T14:06:12.485571+09:00 ERROR [proxy] Upstream timeout: order-service GET /orders/ord-59747 exceeded 10000ms, responding 504\n2026-07-03T14:06:17.745199+09:00 ERROR [proxy] Upstream timeout: order-service GET /orders/ord-84870 exceeded 10000ms, responding 504\n2026-07-03T14:06:29.284111+09:00 ERROR [proxy] Upstream timeout: order-service GET /orders/ord-12472 exceeded 10000ms, responding 504"
+  },
+  {
+    "id": "ev-82220ad629f5e662bad2e811ad7bbc59",
+    "kind": "log",
+    "service": "mysql",
+    "source": "scenario/db_pool_exhaustion/seed-42/logs/mysql/slowlog-WARN.log",
+    "version": "sha256:b42764e2ba311afdbfc51cc0ecd3cb1e83339b69bde4b4112d7198f63a58cab2",
+    "locator": "L1-L3",
+    "text": "2026-07-03T14:00:07.522146+09:00 WARN [slowlog] Slow query: SELECT * FROM orders WHERE customer_ref = 'cus-1963' (execution time 19.0s)\n2026-07-03T14:00:09.498648+09:00 WARN [slowlog] Slow query: SELECT * FROM orders WHERE customer_ref = 'cus-2920' (execution time 24.9s)\n2026-07-03T14:00:33.864415+09:00 WARN [slowlog] Slow query: SELECT * FROM orders WHERE customer_ref = 'cus-8349' (execution time 21.3s)"
+  },
+  {
+    "id": "ev-2f62570359029d520d181e97a0f38929",
+    "kind": "log",
+    "service": "order-service",
+    "source": "scenario/db_pool_exhaustion/seed-42/logs/order-service/db-pool-ERROR.log",
+    "version": "sha256:baf9e2560c9a0ff804248d24c3d2588fbdc28dc0405c640ffcde964ce573f2e7",
+    "locator": "L1-L3",
+    "text": "2026-07-03T14:04:04.520069+09:00 ERROR [db-pool] HikariPool-1 - Connection is not available, request timed out after 30000ms\n2026-07-03T14:04:09.375989+09:00 ERROR [db-pool] HikariPool-1 - Connection is not available, request timed out after 30000ms\n2026-07-03T14:04:14.316118+09:00 ERROR [db-pool] HikariPool-1 - Connection is not available, request timed out after 30000ms"
+  },
+  {
+    "id": "ev-f1b9e3ca0f840c58f84c311f24a0e299",
+    "kind": "log",
+    "service": "order-service",
+    "source": "scenario/db_pool_exhaustion/seed-42/logs/order-service/db-pool-WARN.log",
+    "version": "sha256:5418c8edb9adfe8ee1a38c44d5695e78017d703474bbe41f523af10fa761956f",
+    "locator": "L1-L3",
+    "text": "2026-07-03T14:02:16.779946+09:00 WARN [db-pool] HikariPool-1 - Connection acquisition time 75ms exceeds warning threshold\n2026-07-03T14:03:20.722011+09:00 WARN [db-pool] HikariPool-1 - Connection acquisition time 174ms exceeds warning threshold\n2026-07-03T14:03:26.958443+09:00 WARN [db-pool] HikariPool-1 - Connection acquisition time 148ms exceeds warning threshold"
+  },
+  {
+    "id": "ev-bbdd9d0bd3a476af204c9fef6342e89b",
+    "kind": "deployment",
+    "service": "order-service",
+    "source": "scenario/db_pool_exhaustion/seed-42/changes/order-service-1320.txt",
+    "version": "sha256:ffc9b80633252c633ad94db39a70f188109bd7ee638318beb906bd6d31d73c63",
+    "locator": "L1-L1",
+    "text": "2026-07-03T13:20:00+09:00 deploy order-service v2.4.0 배포 — 주문 조회 쿼리 리팩터링 (customer_ref 조건 추가)"
+  }
+]

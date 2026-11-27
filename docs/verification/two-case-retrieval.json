@@ -1,0 +1,3776 @@
+{
+  "started_utc": "2026-11-25T09:04:08.162327+00:00",
+  "source_revision": "a6cde056aac7a61c82594e7b9af5551c03cbdd6a",
+  "seed": 42,
+  "k": 4,
+  "gold_commit": "429993f446ca62299a26f6f5ada152b354ae38e5",
+  "gold_sha256": {
+    "db_pool_exhaustion": "193792cf6a7e324898a729a86697f9869694a207d55a520a49504077d1b1ce64",
+    "cert_expiry": "5091f265d832285df3d933a538facc527a05d2578180b54ef72ff33f85898e9d"
+  },
+  "runtime_sha256": {
+    "two_case_benchmark.py": "d0fe696bd868448a5e2a5a0a1bdda8a8c7dcd11c19686f6f6951c3a92c10fd58",
+    "retrieval.py": "c7485281e901d937053cc1f6e6dc1cd74b12b571bde1fa6b4713472b61647bb8",
+    "retrieval_corpus.py": "1f3d5ba738acc60425c45a585a456811ba89a857be44e88f08afc86f666ee64d",
+    "analysis.py": "763e9081a2239b3938cf765730da014123292778f5d09ea3ad891a55c32dfcb4",
+    "generator.py": "6a5dfee495c43a875f569769f2e36d9b155032c37843b07fea8333b54aae7d77",
+    "embedder.py": "3dcf28bf3c23712e49ea67bcda8b9fe2c40a2b46ffa20fd9b3c656f257c4ef3e",
+    "five_whys.py": "c38d51a72c6ffa5a96e1b9ace72c449a88be6678407e8ff4d0b97d22f1702c98"
+  },
+  "servers": {
+    "milvus": "2.6.4",
+    "neo4j": "Neo4j/5.26.17"
+  },
+  "packages": {
+    "pymilvus": "2.6.18",
+    "neo4j": "6.4.1",
+    "langchain-core": "1.8.4"
+  },
+  "protocol": "Both scenarios in one fresh Milvus collection. Seeded real Neo4j paths. Verify every returned row against its scenario/team manifest. Time independent warm calls after one paired quality pass. Shuffle queries and arms with seed 42. Graph includes vector retrieval, Neo4j and follow-up Milvus calls. No job, LLM or UI latency.",
+  "scenarios": {
+    "db_pool_exhaustion": {
+      "seed_chunks": 70,
+      "manifest_sha256": "80c70b1bd58be307cba404421cbfae7927f7bdcd90a2a803f024b181d2207479",
+      "summary": {
+        "vector": {
+          "recall": 0.8571428571428571,
+          "reciprocal_rank": 0.9285714285714286,
+          "culprit_questions": 4,
+          "culprit_hit_at_k": 0.75,
+          "culprit_mrr": 0.4375,
+          "questions_returning_deployment": 4
+        },
+        "graph": {
+          "recall": 1.0,
+          "reciprocal_rank": 1.0,
+          "culprit_questions": 4,
+          "culprit_hit_at_k": 1,
+          "culprit_mrr": 0.75,
+          "questions_returning_deployment": 5
+        }
+      },
+      "cases": [
+        {
+          "name": "default_order_latency",
+          "team": "orders",
+          "question": "배포 이후 주문 서비스의 응답이 느려졌다. 어떤 변경이 관련돼 있나?",
+          "relevant": [
+            [
+              "scenario/db_pool_exhaustion/seed-42/changes/order-service-1320.txt",
+              "L1-L1"
+            ],
+            [
+              "scenario/db_pool_exhaustion/seed-42/logs/order-service/db-pool-WARN.log",
+              "L1-L3"
+            ]
+          ],
+          "asks_for_culprit_change": true,
+          "graph_paths": [
+            {
+              "evidence_id": "ev-bbdd9d0bd3a476af204c9fef6342e89b",
+              "affected_incident": "db_pool_exhaustion/seed-42",
+              "nodes": [
+                "ev-bbdd9d0bd3a476af204c9fef6342e89b",
+                "order-service"
+              ],
+              "relations": [
+                "CHANGED"
+              ],
+              "edges": [
+                {
+                  "source": "ev-bbdd9d0bd3a476af204c9fef6342e89b",
+                  "type": "CHANGED",
+                  "target": "order-service"
+                }
+              ]
+            },
+            {
+              "evidence_id": "ev-f1b9e3ca0f840c58f84c311f24a0e299",
+              "anchor": "ev-bbdd9d0bd3a476af204c9fef6342e89b",
+              "time": "2026-07-03T14:02:16.779946+09:00",
+              "incident": "db_pool_exhaustion/seed-42",
+              "kind": "log",
+              "nodes": [
+                "ev-bbdd9d0bd3a476af204c9fef6342e89b",
+                "order-service",
+                "ev-f1b9e3ca0f840c58f84c311f24a0e299"
+              ],
+              "relations": [
+                "CHANGED",
+                "OBSERVED_ON"
+              ],
+              "edges": [
+                {
+                  "source": "ev-bbdd9d0bd3a476af204c9fef6342e89b",
+                  "type": "CHANGED",
+                  "target": "order-service"
+                },
+                {
+                  "source": "ev-f1b9e3ca0f840c58f84c311f24a0e299",
+                  "type": "OBSERVED_ON",
+                  "target": "order-service"
+                }
+              ],
+              "incident_edge": {
+                "source": "db_pool_exhaustion/seed-42",
+                "type": "AFFECTS",
+                "target": "order-service"
+              }
+            },
+            {
+              "evidence_id": "ev-6a16499cfa50ae15c3ef4262926a4316",
+              "affected_incident": "db_pool_exhaustion/seed-42",
+              "nodes": [
+                "ev-6a16499cfa50ae15c3ef4262926a4316",
+                "order-service"
+              ],
+              "relations": [
+                "DESCRIBES"
+              ],
+              "edges": [
+                {
+                  "source": "ev-6a16499cfa50ae15c3ef4262926a4316",
+                  "type": "DESCRIBES",
+                  "target": "order-service"
+                }
+              ]
+            },
+            {
+              "evidence_id": "ev-720c18118931b581ee379ae952c27337",
+              "affected_incident": "db_pool_exhaustion/seed-42",
+              "nodes": [
+                "ev-720c18118931b581ee379ae952c27337",
+                "order-service"
+              ],
+              "relations": [
+                "GUIDES"
+              ],
+              "edges": [
+                {
+                  "source": "ev-720c18118931b581ee379ae952c27337",
+                  "type": "GUIDES",
+                  "target": "order-service"
+                }
+              ]
+            }
+          ],
+          "decisions": [
+            {
+              "evidence_id": "ev-19c35dad285d2a3d1a58e54afa51fc1b",
+              "action": "excluded",
+              "reason": "과거 보고서의 서비스가 이번 장애의 영향 범위(AFFECTS)에 없어 제외했다."
+            },
+            {
+              "evidence_id": "ev-bbdd9d0bd3a476af204c9fef6342e89b",
+              "action": "retained",
+              "reason": "이 근거가 속한 서비스와 팀의 열람 권한을 확인했다."
+            },
+            {
+              "evidence_id": "ev-6a16499cfa50ae15c3ef4262926a4316",
+              "action": "retained",
+              "reason": "과거 보고서의 서비스 연결을 확인했다. 현재 원인 판단에는 이번 사건의 로그가 더 필요하다."
+            },
+            {
+              "evidence_id": "ev-720c18118931b581ee379ae952c27337",
+              "action": "retained",
+              "reason": "이 근거가 속한 서비스와 팀의 열람 권한을 확인했다."
+            },
+            {
+              "evidence_id": "ev-f1b9e3ca0f840c58f84c311f24a0e299",
+              "action": "retained",
+              "reason": "영향 서비스와의 경로 및 배포·로그의 시간 범위를 확인해 우선했다."
+            }
+          ],
+          "vector": {
+            "ids": [
+              "ev-19c35dad285d2a3d1a58e54afa51fc1b",
+              "ev-bbdd9d0bd3a476af204c9fef6342e89b",
+              "ev-6a16499cfa50ae15c3ef4262926a4316",
+              "ev-720c18118931b581ee379ae952c27337"
+            ],
+            "sources": [
+              [
+                "investigation/cache-restart.md",
+                "L3-L4"
+              ],
+              [
+                "scenario/db_pool_exhaustion/seed-42/changes/order-service-1320.txt",
+                "L1-L1"
+              ],
+              [
+                "postmortems/2025-11-14-db-connection-pool.md",
+                "L25-L30"
+              ],
+              [
+                "demo/runbooks/orders.md",
+                "L2-L2"
+              ]
+            ],
+            "gold_ranks": [
+              2,
+              null
+            ],
+            "recall": 0.5,
+            "reciprocal_rank": 0.5,
+            "deployment_ranks": [
+              2
+            ],
+            "culprit_rank": 2
+          },
+          "graph": {
+            "ids": [
+              "ev-bbdd9d0bd3a476af204c9fef6342e89b",
+              "ev-f1b9e3ca0f840c58f84c311f24a0e299",
+              "ev-6a16499cfa50ae15c3ef4262926a4316",
+              "ev-720c18118931b581ee379ae952c27337"
+            ],
+            "sources": [
+              [
+                "scenario/db_pool_exhaustion/seed-42/changes/order-service-1320.txt",
+                "L1-L1"
+              ],
+              [
+                "scenario/db_pool_exhaustion/seed-42/logs/order-service/db-pool-WARN.log",
+                "L1-L3"
+              ],
+              [
+                "postmortems/2025-11-14-db-connection-pool.md",
+                "L25-L30"
+              ],
+              [
+                "demo/runbooks/orders.md",
+                "L2-L2"
+              ]
+            ],
+            "gold_ranks": [
+              1,
+              2
+            ],
+            "recall": 1.0,
+            "reciprocal_rank": 1.0,
+            "deployment_ranks": [
+              1
+            ],
+            "culprit_rank": 1
+          }
+        },
+        {
+          "name": "gateway_to_change",
+          "team": "orders",
+          "question": "api-gateway Upstream timeout 504 exceeded 10000ms와 관련된 이번 변경은?",
+          "relevant": [
+            [
+              "scenario/db_pool_exhaustion/seed-42/logs/api-gateway/proxy-ERROR.log",
+              "L1-L3"
+            ],
+            [
+              "scenario/db_pool_exhaustion/seed-42/changes/order-service-1320.txt",
+              "L1-L1"
+            ]
+          ],
+          "asks_for_culprit_change": true,
+          "graph_paths": [
+            {
+              "evidence_id": "ev-a70bed5eb45a4e77d9e9516a7c2a65b5",
+              "affected_incident": "db_pool_exhaustion/seed-42",
+              "nodes": [
+                "ev-a70bed5eb45a4e77d9e9516a7c2a65b5",
+                "api-gateway"
+              ],
+              "relations": [
+                "OBSERVED_ON"
+              ],
+              "edges": [
+                {
+                  "source": "ev-a70bed5eb45a4e77d9e9516a7c2a65b5",
+                  "type": "OBSERVED_ON",
+                  "target": "api-gateway"
+                }
+              ]
+            },
+            {
+              "evidence_id": "ev-bbdd9d0bd3a476af204c9fef6342e89b",
+              "anchor": "ev-a70bed5eb45a4e77d9e9516a7c2a65b5",
+              "time": "2026-07-03T13:20:00+09:00",
+              "incident": "db_pool_exhaustion/seed-42",
+              "kind": "deployment",
+              "nodes": [
+                "ev-a70bed5eb45a4e77d9e9516a7c2a65b5",
+                "api-gateway",
+                "order-service",
+                "ev-bbdd9d0bd3a476af204c9fef6342e89b"
+              ],
+              "relations": [
+                "OBSERVED_ON",
+                "DEPENDS_ON",
+                "CHANGED"
+              ],
+              "edges": [
+                {
+                  "source": "ev-a70bed5eb45a4e77d9e9516a7c2a65b5",
+                  "type": "OBSERVED_ON",
+                  "target": "api-gateway"
+                },
+                {
+                  "source": "api-gateway",
+                  "type": "DEPENDS_ON",
+                  "target": "order-service"
+                },
+                {
+                  "source": "ev-bbdd9d0bd3a476af204c9fef6342e89b",
+                  "type": "CHANGED",
+                  "target": "order-service"
+                }
+              ],
+              "incident_edge": {
+                "source": "db_pool_exhaustion/seed-42",
+                "type": "AFFECTS",
+                "target": "order-service"
+              }
+            },
+            {
+              "evidence_id": "ev-08c83c51c60696e61c8b6b9458aecb4f",
+              "affected_incident": "db_pool_exhaustion/seed-42",
+              "nodes": [
+                "ev-08c83c51c60696e61c8b6b9458aecb4f",
+                "order-service"
+              ],
+              "relations": [
+                "DESCRIBES"
+              ],
+              "edges": [
+                {
+                  "source": "ev-08c83c51c60696e61c8b6b9458aecb4f",
+                  "type": "DESCRIBES",
+                  "target": "order-service"
+                }
+              ]
+            },
+            {
+              "evidence_id": "ev-bbf62ed7a0eda4b46ec6cd29206520a6",
+              "affected_incident": "db_pool_exhaustion/seed-42",
+              "nodes": [
+                "ev-bbf62ed7a0eda4b46ec6cd29206520a6",
+                "api-gateway"
+              ],
+              "relations": [
+                "DESCRIBES"
+              ],
+              "edges": [
+                {
+                  "source": "ev-bbf62ed7a0eda4b46ec6cd29206520a6",
+                  "type": "DESCRIBES",
+                  "target": "api-gateway"
+                }
+              ]
+            }
+          ],
+          "decisions": [
+            {
+              "evidence_id": "ev-a70bed5eb45a4e77d9e9516a7c2a65b5",
+              "action": "retained",
+              "reason": "이 근거가 속한 서비스와 팀의 열람 권한을 확인했다."
+            },
+            {
+              "evidence_id": "ev-08c83c51c60696e61c8b6b9458aecb4f",
+              "action": "retained",
+              "reason": "과거 보고서의 서비스 연결을 확인했다. 현재 원인 판단에는 이번 사건의 로그가 더 필요하다."
+            },
+            {
+              "evidence_id": "ev-19c35dad285d2a3d1a58e54afa51fc1b",
+              "action": "excluded",
+              "reason": "과거 보고서의 서비스가 이번 장애의 영향 범위(AFFECTS)에 없어 제외했다."
+            },
+            {
+              "evidence_id": "ev-bbf62ed7a0eda4b46ec6cd29206520a6",
+              "action": "retained",
+              "reason": "과거 보고서의 서비스 연결을 확인했다. 현재 원인 판단에는 이번 사건의 로그가 더 필요하다."
+            },
+            {
+              "evidence_id": "ev-bbdd9d0bd3a476af204c9fef6342e89b",
+              "action": "retained",
+              "reason": "영향 서비스와의 경로 및 배포·로그의 시간 범위를 확인해 우선했다."
+            }
+          ],
+          "vector": {
+            "ids": [
+              "ev-a70bed5eb45a4e77d9e9516a7c2a65b5",
+              "ev-08c83c51c60696e61c8b6b9458aecb4f",
+              "ev-19c35dad285d2a3d1a58e54afa51fc1b",
+              "ev-bbf62ed7a0eda4b46ec6cd29206520a6"
+            ],
+            "sources": [
+              [
+                "scenario/db_pool_exhaustion/seed-42/logs/api-gateway/proxy-ERROR.log",
+                "L1-L3"
+              ],
+              [
+                "postmortems/2025-11-14-db-connection-pool.md",
+                "L8-L10"
+              ],
+              [
+                "investigation/cache-restart.md",
+                "L3-L4"
+              ],
+              [
+                "postmortems/2024-08-08-bad-config-rollout.md",
+                "L30-L33"
+              ]
+            ],
+            "gold_ranks": [
+              1,
+              null
+            ],
+            "recall": 0.5,
+            "reciprocal_rank": 1.0,
+            "deployment_ranks": [],
+            "culprit_rank": null
+          },
+          "graph": {
+            "ids": [
+              "ev-a70bed5eb45a4e77d9e9516a7c2a65b5",
+              "ev-bbdd9d0bd3a476af204c9fef6342e89b",
+              "ev-08c83c51c60696e61c8b6b9458aecb4f",
+              "ev-bbf62ed7a0eda4b46ec6cd29206520a6"
+            ],
+            "sources": [
+              [
+                "scenario/db_pool_exhaustion/seed-42/logs/api-gateway/proxy-ERROR.log",
+                "L1-L3"
+              ],
+              [
+                "scenario/db_pool_exhaustion/seed-42/changes/order-service-1320.txt",
+                "L1-L1"
+              ],
+              [
+                "postmortems/2025-11-14-db-connection-pool.md",
+                "L8-L10"
+              ],
+              [
+                "postmortems/2024-08-08-bad-config-rollout.md",
+                "L30-L33"
+              ]
+            ],
+            "gold_ranks": [
+              1,
+              2
+            ],
+            "recall": 1.0,
+            "reciprocal_rank": 1.0,
+            "deployment_ranks": [
+              2
+            ],
+            "culprit_rank": 2
+          }
+        },
+        {
+          "name": "pool_error",
+          "team": "orders",
+          "question": "HikariPool-1 Connection is not available request timed out after 30000ms 원문",
+          "relevant": [
+            [
+              "scenario/db_pool_exhaustion/seed-42/logs/order-service/db-pool-ERROR.log",
+              "L1-L3"
+            ]
+          ],
+          "asks_for_culprit_change": false,
+          "graph_paths": [
+            {
+              "evidence_id": "ev-2f62570359029d520d181e97a0f38929",
+              "affected_incident": "db_pool_exhaustion/seed-42",
+              "nodes": [
+                "ev-2f62570359029d520d181e97a0f38929",
+                "order-service"
+              ],
+              "relations": [
+                "OBSERVED_ON"
+              ],
+              "edges": [
+                {
+                  "source": "ev-2f62570359029d520d181e97a0f38929",
+                  "type": "OBSERVED_ON",
+                  "target": "order-service"
+                }
+              ]
+            },
+            {
+              "evidence_id": "ev-e2f18fbf6afb16772bb3d4a2a1c93590",
+              "affected_incident": "db_pool_exhaustion/seed-42",
+              "nodes": [
+                "ev-e2f18fbf6afb16772bb3d4a2a1c93590",
+                "order-service"
+              ],
+              "relations": [
+                "DESCRIBES"
+              ],
+              "edges": [
+                {
+                  "source": "ev-e2f18fbf6afb16772bb3d4a2a1c93590",
+                  "type": "DESCRIBES",
+                  "target": "order-service"
+                }
+              ]
+            },
+            {
+              "evidence_id": "ev-f1b9e3ca0f840c58f84c311f24a0e299",
+              "affected_incident": "db_pool_exhaustion/seed-42",
+              "nodes": [
+                "ev-f1b9e3ca0f840c58f84c311f24a0e299",
+                "order-service"
+              ],
+              "relations": [
+                "OBSERVED_ON"
+              ],
+              "edges": [
+                {
+                  "source": "ev-f1b9e3ca0f840c58f84c311f24a0e299",
+                  "type": "OBSERVED_ON",
+                  "target": "order-service"
+                }
+              ]
+            },
+            {
+              "evidence_id": "ev-53f46b41a7030e48c6dc9cc5270a1ba7",
+              "affected_incident": "db_pool_exhaustion/seed-42",
+              "nodes": [
+                "ev-53f46b41a7030e48c6dc9cc5270a1ba7",
+                "order-service"
+              ],
+              "relations": [
+                "OBSERVED_ON"
+              ],
+              "edges": [
+                {
+                  "source": "ev-53f46b41a7030e48c6dc9cc5270a1ba7",
+                  "type": "OBSERVED_ON",
+                  "target": "order-service"
+                }
+              ]
+            }
+          ],
+          "decisions": [
+            {
+              "evidence_id": "ev-2f62570359029d520d181e97a0f38929",
+              "action": "retained",
+              "reason": "이 근거가 속한 서비스와 팀의 열람 권한을 확인했다."
+            },
+            {
+              "evidence_id": "ev-e2f18fbf6afb16772bb3d4a2a1c93590",
+              "action": "retained",
+              "reason": "과거 보고서의 서비스 연결을 확인했다. 현재 원인 판단에는 이번 사건의 로그가 더 필요하다."
+            },
+            {
+              "evidence_id": "ev-f1b9e3ca0f840c58f84c311f24a0e299",
+              "action": "retained",
+              "reason": "이 근거가 속한 서비스와 팀의 열람 권한을 확인했다."
+            },
+            {
+              "evidence_id": "ev-53f46b41a7030e48c6dc9cc5270a1ba7",
+              "action": "retained",
+              "reason": "이 근거가 속한 서비스와 팀의 열람 권한을 확인했다."
+            }
+          ],
+          "vector": {
+            "ids": [
+              "ev-2f62570359029d520d181e97a0f38929",
+              "ev-e2f18fbf6afb16772bb3d4a2a1c93590",
+              "ev-f1b9e3ca0f840c58f84c311f24a0e299",
+              "ev-53f46b41a7030e48c6dc9cc5270a1ba7"
+            ],
+            "sources": [
+              [
+                "scenario/db_pool_exhaustion/seed-42/logs/order-service/db-pool-ERROR.log",
+                "L1-L3"
+              ],
+              [
+                "postmortems/2025-11-14-db-connection-pool.md",
+                "L12-L18"
+              ],
+              [
+                "scenario/db_pool_exhaustion/seed-42/logs/order-service/db-pool-WARN.log",
+                "L1-L3"
+              ],
+              [
+                "scenario/db_pool_exhaustion/seed-42/logs/order-service/api-ERROR.log",
+                "L1-L3"
+              ]
+            ],
+            "gold_ranks": [
+              1
+            ],
+            "recall": 1.0,
+            "reciprocal_rank": 1.0,
+            "deployment_ranks": []
+          },
+          "graph": {
+            "ids": [
+              "ev-2f62570359029d520d181e97a0f38929",
+              "ev-e2f18fbf6afb16772bb3d4a2a1c93590",
+              "ev-f1b9e3ca0f840c58f84c311f24a0e299",
+              "ev-53f46b41a7030e48c6dc9cc5270a1ba7"
+            ],
+            "sources": [
+              [
+                "scenario/db_pool_exhaustion/seed-42/logs/order-service/db-pool-ERROR.log",
+                "L1-L3"
+              ],
+              [
+                "postmortems/2025-11-14-db-connection-pool.md",
+                "L12-L18"
+              ],
+              [
+                "scenario/db_pool_exhaustion/seed-42/logs/order-service/db-pool-WARN.log",
+                "L1-L3"
+              ],
+              [
+                "scenario/db_pool_exhaustion/seed-42/logs/order-service/api-ERROR.log",
+                "L1-L3"
+              ]
+            ],
+            "gold_ranks": [
+              1
+            ],
+            "recall": 1.0,
+            "reciprocal_rank": 1.0,
+            "deployment_ranks": []
+          }
+        },
+        {
+          "name": "db_query",
+          "team": "platform",
+          "question": "Slow query SELECT orders WHERE customer_ref execution time의 실제 실행 로그",
+          "relevant": [
+            [
+              "scenario/db_pool_exhaustion/seed-42/logs/mysql/slowlog-WARN.log",
+              "L1-L3"
+            ]
+          ],
+          "asks_for_culprit_change": false,
+          "graph_paths": [
+            {
+              "evidence_id": "ev-82220ad629f5e662bad2e811ad7bbc59",
+              "affected_incident": "db_pool_exhaustion/seed-42",
+              "nodes": [
+                "ev-82220ad629f5e662bad2e811ad7bbc59",
+                "mysql"
+              ],
+              "relations": [
+                "OBSERVED_ON"
+              ],
+              "edges": [
+                {
+                  "source": "ev-82220ad629f5e662bad2e811ad7bbc59",
+                  "type": "OBSERVED_ON",
+                  "target": "mysql"
+                }
+              ]
+            },
+            {
+              "evidence_id": "ev-bbdd9d0bd3a476af204c9fef6342e89b",
+              "affected_incident": "db_pool_exhaustion/seed-42",
+              "nodes": [
+                "ev-bbdd9d0bd3a476af204c9fef6342e89b",
+                "order-service"
+              ],
+              "relations": [
+                "CHANGED"
+              ],
+              "edges": [
+                {
+                  "source": "ev-bbdd9d0bd3a476af204c9fef6342e89b",
+                  "type": "CHANGED",
+                  "target": "order-service"
+                }
+              ]
+            },
+            {
+              "evidence_id": "ev-98f21731c1916700e5ca2cb672b02947",
+              "affected_incident": "db_pool_exhaustion/seed-42",
+              "nodes": [
+                "ev-98f21731c1916700e5ca2cb672b02947",
+                "order-service"
+              ],
+              "relations": [
+                "DESCRIBES"
+              ],
+              "edges": [
+                {
+                  "source": "ev-98f21731c1916700e5ca2cb672b02947",
+                  "type": "DESCRIBES",
+                  "target": "order-service"
+                }
+              ]
+            },
+            {
+              "evidence_id": "ev-2f62570359029d520d181e97a0f38929",
+              "affected_incident": "db_pool_exhaustion/seed-42",
+              "nodes": [
+                "ev-2f62570359029d520d181e97a0f38929",
+                "order-service"
+              ],
+              "relations": [
+                "OBSERVED_ON"
+              ],
+              "edges": [
+                {
+                  "source": "ev-2f62570359029d520d181e97a0f38929",
+                  "type": "OBSERVED_ON",
+                  "target": "order-service"
+                }
+              ]
+            }
+          ],
+          "decisions": [
+            {
+              "evidence_id": "ev-82220ad629f5e662bad2e811ad7bbc59",
+              "action": "retained",
+              "reason": "이 근거가 속한 서비스와 팀의 열람 권한을 확인했다."
+            },
+            {
+              "evidence_id": "ev-bbdd9d0bd3a476af204c9fef6342e89b",
+              "action": "retained",
+              "reason": "이 근거가 속한 서비스와 팀의 열람 권한을 확인했다."
+            },
+            {
+              "evidence_id": "ev-98f21731c1916700e5ca2cb672b02947",
+              "action": "retained",
+              "reason": "과거 보고서의 서비스 연결을 확인했다. 현재 원인 판단에는 이번 사건의 로그가 더 필요하다."
+            },
+            {
+              "evidence_id": "ev-2f62570359029d520d181e97a0f38929",
+              "action": "retained",
+              "reason": "이 근거가 속한 서비스와 팀의 열람 권한을 확인했다."
+            }
+          ],
+          "vector": {
+            "ids": [
+              "ev-82220ad629f5e662bad2e811ad7bbc59",
+              "ev-bbdd9d0bd3a476af204c9fef6342e89b",
+              "ev-98f21731c1916700e5ca2cb672b02947",
+              "ev-2f62570359029d520d181e97a0f38929"
+            ],
+            "sources": [
+              [
+                "scenario/db_pool_exhaustion/seed-42/logs/mysql/slowlog-WARN.log",
+                "L1-L3"
+              ],
+              [
+                "scenario/db_pool_exhaustion/seed-42/changes/order-service-1320.txt",
+                "L1-L1"
+              ],
+              [
+                "postmortems/2025-11-14-db-connection-pool.md",
+                "L32-L36"
+              ],
+              [
+                "scenario/db_pool_exhaustion/seed-42/logs/order-service/db-pool-ERROR.log",
+                "L1-L3"
+              ]
+            ],
+            "gold_ranks": [
+              1
+            ],
+            "recall": 1.0,
+            "reciprocal_rank": 1.0,
+            "deployment_ranks": [
+              2
+            ]
+          },
+          "graph": {
+            "ids": [
+              "ev-82220ad629f5e662bad2e811ad7bbc59",
+              "ev-bbdd9d0bd3a476af204c9fef6342e89b",
+              "ev-98f21731c1916700e5ca2cb672b02947",
+              "ev-2f62570359029d520d181e97a0f38929"
+            ],
+            "sources": [
+              [
+                "scenario/db_pool_exhaustion/seed-42/logs/mysql/slowlog-WARN.log",
+                "L1-L3"
+              ],
+              [
+                "scenario/db_pool_exhaustion/seed-42/changes/order-service-1320.txt",
+                "L1-L1"
+              ],
+              [
+                "postmortems/2025-11-14-db-connection-pool.md",
+                "L32-L36"
+              ],
+              [
+                "scenario/db_pool_exhaustion/seed-42/logs/order-service/db-pool-ERROR.log",
+                "L1-L3"
+              ]
+            ],
+            "gold_ranks": [
+              1
+            ],
+            "recall": 1.0,
+            "reciprocal_rank": 1.0,
+            "deployment_ranks": [
+              2
+            ]
+          }
+        },
+        {
+          "name": "circuit_to_change",
+          "team": "platform",
+          "question": "왜 api-gateway Circuit breaker OPEN for order-service가 발생했는지 장애 로그와 선행 변경을 찾아줘",
+          "relevant": [
+            [
+              "scenario/db_pool_exhaustion/seed-42/logs/api-gateway/circuit-WARN.log",
+              "L1-L3"
+            ],
+            [
+              "scenario/db_pool_exhaustion/seed-42/changes/order-service-1320.txt",
+              "L1-L1"
+            ]
+          ],
+          "asks_for_culprit_change": true,
+          "graph_paths": [
+            {
+              "evidence_id": "ev-0913162d8b8d2ac24647df4f357c9f0d",
+              "affected_incident": "db_pool_exhaustion/seed-42",
+              "nodes": [
+                "ev-0913162d8b8d2ac24647df4f357c9f0d",
+                "api-gateway"
+              ],
+              "relations": [
+                "OBSERVED_ON"
+              ],
+              "edges": [
+                {
+                  "source": "ev-0913162d8b8d2ac24647df4f357c9f0d",
+                  "type": "OBSERVED_ON",
+                  "target": "api-gateway"
+                }
+              ]
+            },
+            {
+              "evidence_id": "ev-bbdd9d0bd3a476af204c9fef6342e89b",
+              "anchor": "ev-0913162d8b8d2ac24647df4f357c9f0d",
+              "time": "2026-07-03T13:20:00+09:00",
+              "incident": "db_pool_exhaustion/seed-42",
+              "kind": "deployment",
+              "nodes": [
+                "ev-0913162d8b8d2ac24647df4f357c9f0d",
+                "api-gateway",
+                "order-service",
+                "ev-bbdd9d0bd3a476af204c9fef6342e89b"
+              ],
+              "relations": [
+                "OBSERVED_ON",
+                "DEPENDS_ON",
+                "CHANGED"
+              ],
+              "edges": [
+                {
+                  "source": "ev-0913162d8b8d2ac24647df4f357c9f0d",
+                  "type": "OBSERVED_ON",
+                  "target": "api-gateway"
+                },
+                {
+                  "source": "api-gateway",
+                  "type": "DEPENDS_ON",
+                  "target": "order-service"
+                },
+                {
+                  "source": "ev-bbdd9d0bd3a476af204c9fef6342e89b",
+                  "type": "CHANGED",
+                  "target": "order-service"
+                }
+              ],
+              "incident_edge": {
+                "source": "db_pool_exhaustion/seed-42",
+                "type": "AFFECTS",
+                "target": "order-service"
+              }
+            },
+            {
+              "evidence_id": "ev-6a16499cfa50ae15c3ef4262926a4316",
+              "affected_incident": "db_pool_exhaustion/seed-42",
+              "nodes": [
+                "ev-6a16499cfa50ae15c3ef4262926a4316",
+                "order-service"
+              ],
+              "relations": [
+                "DESCRIBES"
+              ],
+              "edges": [
+                {
+                  "source": "ev-6a16499cfa50ae15c3ef4262926a4316",
+                  "type": "DESCRIBES",
+                  "target": "order-service"
+                }
+              ]
+            },
+            {
+              "evidence_id": "ev-0b89e4a751c42e4b571517240c1868ca",
+              "affected_incident": "db_pool_exhaustion/seed-42",
+              "nodes": [
+                "ev-0b89e4a751c42e4b571517240c1868ca",
+                "api-gateway"
+              ],
+              "relations": [
+                "DESCRIBES"
+              ],
+              "edges": [
+                {
+                  "source": "ev-0b89e4a751c42e4b571517240c1868ca",
+                  "type": "DESCRIBES",
+                  "target": "api-gateway"
+                }
+              ]
+            }
+          ],
+          "decisions": [
+            {
+              "evidence_id": "ev-0913162d8b8d2ac24647df4f357c9f0d",
+              "action": "retained",
+              "reason": "이 근거가 속한 서비스와 팀의 열람 권한을 확인했다."
+            },
+            {
+              "evidence_id": "ev-6a16499cfa50ae15c3ef4262926a4316",
+              "action": "retained",
+              "reason": "과거 보고서의 서비스 연결을 확인했다. 현재 원인 판단에는 이번 사건의 로그가 더 필요하다."
+            },
+            {
+              "evidence_id": "ev-0b89e4a751c42e4b571517240c1868ca",
+              "action": "retained",
+              "reason": "과거 보고서의 서비스 연결을 확인했다. 현재 원인 판단에는 이번 사건의 로그가 더 필요하다."
+            },
+            {
+              "evidence_id": "ev-bbdd9d0bd3a476af204c9fef6342e89b",
+              "action": "retained",
+              "reason": "영향 서비스와의 경로 및 배포·로그의 시간 범위를 확인해 우선했다."
+            }
+          ],
+          "vector": {
+            "ids": [
+              "ev-0913162d8b8d2ac24647df4f357c9f0d",
+              "ev-6a16499cfa50ae15c3ef4262926a4316",
+              "ev-0b89e4a751c42e4b571517240c1868ca",
+              "ev-bbdd9d0bd3a476af204c9fef6342e89b"
+            ],
+            "sources": [
+              [
+                "scenario/db_pool_exhaustion/seed-42/logs/api-gateway/circuit-WARN.log",
+                "L1-L3"
+              ],
+              [
+                "postmortems/2025-11-14-db-connection-pool.md",
+                "L25-L30"
+              ],
+              [
+                "postmortems/2024-08-08-bad-config-rollout.md",
+                "L3-L6"
+              ],
+              [
+                "scenario/db_pool_exhaustion/seed-42/changes/order-service-1320.txt",
+                "L1-L1"
+              ]
+            ],
+            "gold_ranks": [
+              1,
+              4
+            ],
+            "recall": 1.0,
+            "reciprocal_rank": 1.0,
+            "deployment_ranks": [
+              4
+            ],
+            "culprit_rank": 4
+          },
+          "graph": {
+            "ids": [
+              "ev-0913162d8b8d2ac24647df4f357c9f0d",
+              "ev-bbdd9d0bd3a476af204c9fef6342e89b",
+              "ev-6a16499cfa50ae15c3ef4262926a4316",
+              "ev-0b89e4a751c42e4b571517240c1868ca"
+            ],
+            "sources": [
+              [
+                "scenario/db_pool_exhaustion/seed-42/logs/api-gateway/circuit-WARN.log",
+                "L1-L3"
+              ],
+              [
+                "scenario/db_pool_exhaustion/seed-42/changes/order-service-1320.txt",
+                "L1-L1"
+              ],
+              [
+                "postmortems/2025-11-14-db-connection-pool.md",
+                "L25-L30"
+              ],
+              [
+                "postmortems/2024-08-08-bad-config-rollout.md",
+                "L3-L6"
+              ]
+            ],
+            "gold_ranks": [
+              1,
+              2
+            ],
+            "recall": 1.0,
+            "reciprocal_rank": 1.0,
+            "deployment_ranks": [
+              2
+            ],
+            "culprit_rank": 2
+          }
+        },
+        {
+          "name": "historical_plan",
+          "team": "orders",
+          "question": "2025 주문 API 커넥션 풀 고갈 재발 방지 대책 EXPLAIN 자동 검토",
+          "relevant": [
+            [
+              "postmortems/2025-11-14-db-connection-pool.md",
+              "L32-L36"
+            ]
+          ],
+          "asks_for_culprit_change": false,
+          "graph_paths": [
+            {
+              "evidence_id": "ev-98f21731c1916700e5ca2cb672b02947",
+              "affected_incident": "db_pool_exhaustion/seed-42",
+              "nodes": [
+                "ev-98f21731c1916700e5ca2cb672b02947",
+                "order-service"
+              ],
+              "relations": [
+                "DESCRIBES"
+              ],
+              "edges": [
+                {
+                  "source": "ev-98f21731c1916700e5ca2cb672b02947",
+                  "type": "DESCRIBES",
+                  "target": "order-service"
+                }
+              ]
+            },
+            {
+              "evidence_id": "ev-7ca0f5a74c0a26aaf57772e3c7f9efd3",
+              "affected_incident": "db_pool_exhaustion/seed-42",
+              "nodes": [
+                "ev-7ca0f5a74c0a26aaf57772e3c7f9efd3",
+                "order-service"
+              ],
+              "relations": [
+                "GUIDES"
+              ],
+              "edges": [
+                {
+                  "source": "ev-7ca0f5a74c0a26aaf57772e3c7f9efd3",
+                  "type": "GUIDES",
+                  "target": "order-service"
+                }
+              ]
+            },
+            {
+              "evidence_id": "ev-2f637f088ae455e978e5993a4475c085",
+              "affected_incident": null,
+              "nodes": [
+                "ev-2f637f088ae455e978e5993a4475c085",
+                "redis-cache"
+              ],
+              "relations": [
+                "DESCRIBES"
+              ],
+              "edges": [
+                {
+                  "source": "ev-2f637f088ae455e978e5993a4475c085",
+                  "type": "DESCRIBES",
+                  "target": "redis-cache"
+                }
+              ]
+            },
+            {
+              "evidence_id": "ev-bbf62ed7a0eda4b46ec6cd29206520a6",
+              "affected_incident": "db_pool_exhaustion/seed-42",
+              "nodes": [
+                "ev-bbf62ed7a0eda4b46ec6cd29206520a6",
+                "api-gateway"
+              ],
+              "relations": [
+                "DESCRIBES"
+              ],
+              "edges": [
+                {
+                  "source": "ev-bbf62ed7a0eda4b46ec6cd29206520a6",
+                  "type": "DESCRIBES",
+                  "target": "api-gateway"
+                }
+              ]
+            }
+          ],
+          "decisions": [
+            {
+              "evidence_id": "ev-98f21731c1916700e5ca2cb672b02947",
+              "action": "retained",
+              "reason": "과거 보고서의 서비스 연결을 확인했다. 현재 원인 판단에는 이번 사건의 로그가 더 필요하다."
+            },
+            {
+              "evidence_id": "ev-7ca0f5a74c0a26aaf57772e3c7f9efd3",
+              "action": "retained",
+              "reason": "이 근거가 속한 서비스와 팀의 열람 권한을 확인했다."
+            },
+            {
+              "evidence_id": "ev-2f637f088ae455e978e5993a4475c085",
+              "action": "retained",
+              "reason": "과거 보고서의 서비스 연결을 확인했다. 현재 원인 판단에는 이번 사건의 로그가 더 필요하다."
+            },
+            {
+              "evidence_id": "ev-bbf62ed7a0eda4b46ec6cd29206520a6",
+              "action": "retained",
+              "reason": "과거 보고서의 서비스 연결을 확인했다. 현재 원인 판단에는 이번 사건의 로그가 더 필요하다."
+            }
+          ],
+          "vector": {
+            "ids": [
+              "ev-98f21731c1916700e5ca2cb672b02947",
+              "ev-7ca0f5a74c0a26aaf57772e3c7f9efd3",
+              "ev-2f637f088ae455e978e5993a4475c085",
+              "ev-bbf62ed7a0eda4b46ec6cd29206520a6"
+            ],
+            "sources": [
+              [
+                "postmortems/2025-11-14-db-connection-pool.md",
+                "L32-L36"
+              ],
+              [
+                "demo/runbooks/orders.md",
+                "L4-L4"
+              ],
+              [
+                "postmortems/2025-01-17-cache-stampede.md",
+                "L32-L36"
+              ],
+              [
+                "postmortems/2024-08-08-bad-config-rollout.md",
+                "L30-L33"
+              ]
+            ],
+            "gold_ranks": [
+              1
+            ],
+            "recall": 1.0,
+            "reciprocal_rank": 1.0,
+            "deployment_ranks": []
+          },
+          "graph": {
+            "ids": [
+              "ev-98f21731c1916700e5ca2cb672b02947",
+              "ev-7ca0f5a74c0a26aaf57772e3c7f9efd3",
+              "ev-2f637f088ae455e978e5993a4475c085",
+              "ev-bbf62ed7a0eda4b46ec6cd29206520a6"
+            ],
+            "sources": [
+              [
+                "postmortems/2025-11-14-db-connection-pool.md",
+                "L32-L36"
+              ],
+              [
+                "demo/runbooks/orders.md",
+                "L4-L4"
+              ],
+              [
+                "postmortems/2025-01-17-cache-stampede.md",
+                "L32-L36"
+              ],
+              [
+                "postmortems/2024-08-08-bad-config-rollout.md",
+                "L30-L33"
+              ]
+            ],
+            "gold_ranks": [
+              1
+            ],
+            "recall": 1.0,
+            "reciprocal_rank": 1.0,
+            "deployment_ranks": []
+          }
+        },
+        {
+          "name": "rollout_record",
+          "team": "orders",
+          "question": "order-service v2.4.0 배포 주문 조회 쿼리 리팩터링 customer_ref 기록",
+          "relevant": [
+            [
+              "scenario/db_pool_exhaustion/seed-42/changes/order-service-1320.txt",
+              "L1-L1"
+            ]
+          ],
+          "asks_for_culprit_change": true,
+          "graph_paths": [
+            {
+              "evidence_id": "ev-bbdd9d0bd3a476af204c9fef6342e89b",
+              "affected_incident": "db_pool_exhaustion/seed-42",
+              "nodes": [
+                "ev-bbdd9d0bd3a476af204c9fef6342e89b",
+                "order-service"
+              ],
+              "relations": [
+                "CHANGED"
+              ],
+              "edges": [
+                {
+                  "source": "ev-bbdd9d0bd3a476af204c9fef6342e89b",
+                  "type": "CHANGED",
+                  "target": "order-service"
+                }
+              ]
+            },
+            {
+              "evidence_id": "ev-f1b9e3ca0f840c58f84c311f24a0e299",
+              "anchor": "ev-bbdd9d0bd3a476af204c9fef6342e89b",
+              "time": "2026-07-03T14:02:16.779946+09:00",
+              "incident": "db_pool_exhaustion/seed-42",
+              "kind": "log",
+              "nodes": [
+                "ev-bbdd9d0bd3a476af204c9fef6342e89b",
+                "order-service",
+                "ev-f1b9e3ca0f840c58f84c311f24a0e299"
+              ],
+              "relations": [
+                "CHANGED",
+                "OBSERVED_ON"
+              ],
+              "edges": [
+                {
+                  "source": "ev-bbdd9d0bd3a476af204c9fef6342e89b",
+                  "type": "CHANGED",
+                  "target": "order-service"
+                },
+                {
+                  "source": "ev-f1b9e3ca0f840c58f84c311f24a0e299",
+                  "type": "OBSERVED_ON",
+                  "target": "order-service"
+                }
+              ],
+              "incident_edge": {
+                "source": "db_pool_exhaustion/seed-42",
+                "type": "AFFECTS",
+                "target": "order-service"
+              }
+            },
+            {
+              "evidence_id": "ev-6a16499cfa50ae15c3ef4262926a4316",
+              "affected_incident": "db_pool_exhaustion/seed-42",
+              "nodes": [
+                "ev-6a16499cfa50ae15c3ef4262926a4316",
+                "order-service"
+              ],
+              "relations": [
+                "DESCRIBES"
+              ],
+              "edges": [
+                {
+                  "source": "ev-6a16499cfa50ae15c3ef4262926a4316",
+                  "type": "DESCRIBES",
+                  "target": "order-service"
+                }
+              ]
+            },
+            {
+              "evidence_id": "ev-720c18118931b581ee379ae952c27337",
+              "affected_incident": "db_pool_exhaustion/seed-42",
+              "nodes": [
+                "ev-720c18118931b581ee379ae952c27337",
+                "order-service"
+              ],
+              "relations": [
+                "GUIDES"
+              ],
+              "edges": [
+                {
+                  "source": "ev-720c18118931b581ee379ae952c27337",
+                  "type": "GUIDES",
+                  "target": "order-service"
+                }
+              ]
+            }
+          ],
+          "decisions": [
+            {
+              "evidence_id": "ev-bbdd9d0bd3a476af204c9fef6342e89b",
+              "action": "retained",
+              "reason": "이 근거가 속한 서비스와 팀의 열람 권한을 확인했다."
+            },
+            {
+              "evidence_id": "ev-6a16499cfa50ae15c3ef4262926a4316",
+              "action": "retained",
+              "reason": "과거 보고서의 서비스 연결을 확인했다. 현재 원인 판단에는 이번 사건의 로그가 더 필요하다."
+            },
+            {
+              "evidence_id": "ev-720c18118931b581ee379ae952c27337",
+              "action": "retained",
+              "reason": "이 근거가 속한 서비스와 팀의 열람 권한을 확인했다."
+            },
+            {
+              "evidence_id": "ev-a70bed5eb45a4e77d9e9516a7c2a65b5",
+              "action": "excluded",
+              "reason": "이번 장애 시간대의 연결 근거가 우선되어 상위 4개에서 제외됐다."
+            },
+            {
+              "evidence_id": "ev-f1b9e3ca0f840c58f84c311f24a0e299",
+              "action": "retained",
+              "reason": "영향 서비스와의 경로 및 배포·로그의 시간 범위를 확인해 우선했다."
+            }
+          ],
+          "vector": {
+            "ids": [
+              "ev-bbdd9d0bd3a476af204c9fef6342e89b",
+              "ev-6a16499cfa50ae15c3ef4262926a4316",
+              "ev-720c18118931b581ee379ae952c27337",
+              "ev-a70bed5eb45a4e77d9e9516a7c2a65b5"
+            ],
+            "sources": [
+              [
+                "scenario/db_pool_exhaustion/seed-42/changes/order-service-1320.txt",
+                "L1-L1"
+              ],
+              [
+                "postmortems/2025-11-14-db-connection-pool.md",
+                "L25-L30"
+              ],
+              [
+                "demo/runbooks/orders.md",
+                "L2-L2"
+              ],
+              [
+                "scenario/db_pool_exhaustion/seed-42/logs/api-gateway/proxy-ERROR.log",
+                "L1-L3"
+              ]
+            ],
+            "gold_ranks": [
+              1
+            ],
+            "recall": 1.0,
+            "reciprocal_rank": 1.0,
+            "deployment_ranks": [
+              1
+            ],
+            "culprit_rank": 1
+          },
+          "graph": {
+            "ids": [
+              "ev-bbdd9d0bd3a476af204c9fef6342e89b",
+              "ev-f1b9e3ca0f840c58f84c311f24a0e299",
+              "ev-6a16499cfa50ae15c3ef4262926a4316",
+              "ev-720c18118931b581ee379ae952c27337"
+            ],
+            "sources": [
+              [
+                "scenario/db_pool_exhaustion/seed-42/changes/order-service-1320.txt",
+                "L1-L1"
+              ],
+              [
+                "scenario/db_pool_exhaustion/seed-42/logs/order-service/db-pool-WARN.log",
+                "L1-L3"
+              ],
+              [
+                "postmortems/2025-11-14-db-connection-pool.md",
+                "L25-L30"
+              ],
+              [
+                "demo/runbooks/orders.md",
+                "L2-L2"
+              ]
+            ],
+            "gold_ranks": [
+              1
+            ],
+            "recall": 1.0,
+            "reciprocal_rank": 1.0,
+            "deployment_ranks": [
+              1
+            ],
+            "culprit_rank": 1
+          }
+        }
+      ]
+    },
+    "cert_expiry": {
+      "seed_chunks": 67,
+      "manifest_sha256": "790b4ef5841049b417b1eb903c1c9b9d8144ff073a7cdb8d3552b91786ab0f68",
+      "summary": {
+        "vector": {
+          "recall": 0.42857142857142855,
+          "reciprocal_rank": 0.5,
+          "questions_returning_deployment": 0
+        },
+        "graph": {
+          "recall": 0.6428571428571429,
+          "reciprocal_rank": 0.6428571428571429,
+          "questions_returning_deployment": 0
+        }
+      },
+      "cases": [
+        {
+          "name": "tls_handshake",
+          "question": "SSL handshake failed with auth-provider: certificate expired. notAfter가 찍힌 이번 장애 원문은?",
+          "team": "platform",
+          "relevant": [
+            [
+              "scenario/cert_expiry/seed-42/logs/user-service/tls-ERROR.log",
+              "L1-L3"
+            ]
+          ],
+          "causal_probe": false,
+          "must_withhold_cause": false,
+          "graph_paths": [
+            {
+              "evidence_id": "ev-f6f8436b8a9d0e53132680b5c8fe992c",
+              "affected_incident": "cert_expiry/seed-42",
+              "nodes": [
+                "ev-f6f8436b8a9d0e53132680b5c8fe992c",
+                "user-service"
+              ],
+              "relations": [
+                "OBSERVED_ON"
+              ],
+              "edges": [
+                {
+                  "source": "ev-f6f8436b8a9d0e53132680b5c8fe992c",
+                  "type": "OBSERVED_ON",
+                  "target": "user-service"
+                }
+              ]
+            },
+            {
+              "evidence_id": "ev-13380a7b889df9dcb088b16fc4336a82",
+              "affected_incident": "cert_expiry/seed-42",
+              "nodes": [
+                "ev-13380a7b889df9dcb088b16fc4336a82",
+                "user-service"
+              ],
+              "relations": [
+                "DESCRIBES"
+              ],
+              "edges": [
+                {
+                  "source": "ev-13380a7b889df9dcb088b16fc4336a82",
+                  "type": "DESCRIBES",
+                  "target": "user-service"
+                }
+              ]
+            },
+            {
+              "evidence_id": "ev-fe092d4a889baf4ea2d6b11b33702e91",
+              "affected_incident": "cert_expiry/seed-42",
+              "nodes": [
+                "ev-fe092d4a889baf4ea2d6b11b33702e91",
+                "user-service"
+              ],
+              "relations": [
+                "OBSERVED_ON"
+              ],
+              "edges": [
+                {
+                  "source": "ev-fe092d4a889baf4ea2d6b11b33702e91",
+                  "type": "OBSERVED_ON",
+                  "target": "user-service"
+                }
+              ]
+            },
+            {
+              "evidence_id": "ev-de521d0971dd9533c21c0e7c4fd2ebe2",
+              "affected_incident": "cert_expiry/seed-42",
+              "nodes": [
+                "ev-de521d0971dd9533c21c0e7c4fd2ebe2",
+                "api-gateway"
+              ],
+              "relations": [
+                "DESCRIBES"
+              ],
+              "edges": [
+                {
+                  "source": "ev-de521d0971dd9533c21c0e7c4fd2ebe2",
+                  "type": "DESCRIBES",
+                  "target": "api-gateway"
+                }
+              ]
+            }
+          ],
+          "decisions": [
+            {
+              "evidence_id": "ev-f6f8436b8a9d0e53132680b5c8fe992c",
+              "action": "retained",
+              "reason": "이 근거가 속한 서비스와 팀의 열람 권한을 확인했다."
+            },
+            {
+              "evidence_id": "ev-13380a7b889df9dcb088b16fc4336a82",
+              "action": "retained",
+              "reason": "과거 보고서의 서비스 연결을 확인했다. 현재 원인 판단에는 이번 사건의 로그가 더 필요하다."
+            },
+            {
+              "evidence_id": "ev-fe092d4a889baf4ea2d6b11b33702e91",
+              "action": "retained",
+              "reason": "이 근거가 속한 서비스와 팀의 열람 권한을 확인했다."
+            },
+            {
+              "evidence_id": "ev-de521d0971dd9533c21c0e7c4fd2ebe2",
+              "action": "retained",
+              "reason": "과거 보고서의 서비스 연결을 확인했다. 현재 원인 판단에는 이번 사건의 로그가 더 필요하다."
+            }
+          ],
+          "vector": {
+            "ids": [
+              "ev-f6f8436b8a9d0e53132680b5c8fe992c",
+              "ev-13380a7b889df9dcb088b16fc4336a82",
+              "ev-fe092d4a889baf4ea2d6b11b33702e91",
+              "ev-de521d0971dd9533c21c0e7c4fd2ebe2"
+            ],
+            "sources": [
+              [
+                "scenario/cert_expiry/seed-42/logs/user-service/tls-ERROR.log",
+                "L1-L3"
+              ],
+              [
+                "postmortems/2025-03-30-tls-cert-expiry.md",
+                "L12-L18"
+              ],
+              [
+                "scenario/cert_expiry/seed-42/logs/user-service/auth-ERROR.log",
+                "L1-L3"
+              ],
+              [
+                "postmortems/2024-08-08-bad-config-rollout.md",
+                "L8-L10"
+              ]
+            ],
+            "gold_ranks": [
+              1
+            ],
+            "recall": 1.0,
+            "reciprocal_rank": 1.0,
+            "deployment_ranks": []
+          },
+          "graph": {
+            "ids": [
+              "ev-f6f8436b8a9d0e53132680b5c8fe992c",
+              "ev-13380a7b889df9dcb088b16fc4336a82",
+              "ev-fe092d4a889baf4ea2d6b11b33702e91",
+              "ev-de521d0971dd9533c21c0e7c4fd2ebe2"
+            ],
+            "sources": [
+              [
+                "scenario/cert_expiry/seed-42/logs/user-service/tls-ERROR.log",
+                "L1-L3"
+              ],
+              [
+                "postmortems/2025-03-30-tls-cert-expiry.md",
+                "L12-L18"
+              ],
+              [
+                "scenario/cert_expiry/seed-42/logs/user-service/auth-ERROR.log",
+                "L1-L3"
+              ],
+              [
+                "postmortems/2024-08-08-bad-config-rollout.md",
+                "L8-L10"
+              ]
+            ],
+            "gold_ranks": [
+              1
+            ],
+            "recall": 1.0,
+            "reciprocal_rank": 1.0,
+            "deployment_ranks": []
+          }
+        },
+        {
+          "name": "token_chain",
+          "question": "realm=main 토큰 발급 실패와 그 직전 TLS 오류 로그를 함께 보여줘.",
+          "team": "platform",
+          "relevant": [
+            [
+              "scenario/cert_expiry/seed-42/logs/user-service/auth-ERROR.log",
+              "L1-L3"
+            ],
+            [
+              "scenario/cert_expiry/seed-42/logs/user-service/tls-ERROR.log",
+              "L1-L3"
+            ]
+          ],
+          "causal_probe": false,
+          "must_withhold_cause": false,
+          "graph_paths": [
+            {
+              "evidence_id": "ev-fe092d4a889baf4ea2d6b11b33702e91",
+              "affected_incident": "cert_expiry/seed-42",
+              "nodes": [
+                "ev-fe092d4a889baf4ea2d6b11b33702e91",
+                "user-service"
+              ],
+              "relations": [
+                "OBSERVED_ON"
+              ],
+              "edges": [
+                {
+                  "source": "ev-fe092d4a889baf4ea2d6b11b33702e91",
+                  "type": "OBSERVED_ON",
+                  "target": "user-service"
+                }
+              ]
+            },
+            {
+              "evidence_id": "ev-070f5688409d713649bafbd40a416c47",
+              "affected_incident": "cert_expiry/seed-42",
+              "nodes": [
+                "ev-070f5688409d713649bafbd40a416c47",
+                "user-service"
+              ],
+              "relations": [
+                "DESCRIBES"
+              ],
+              "edges": [
+                {
+                  "source": "ev-070f5688409d713649bafbd40a416c47",
+                  "type": "DESCRIBES",
+                  "target": "user-service"
+                }
+              ]
+            },
+            {
+              "evidence_id": "ev-28caa122208328df9a5f6ee67d37e7dd",
+              "affected_incident": "cert_expiry/seed-42",
+              "nodes": [
+                "ev-28caa122208328df9a5f6ee67d37e7dd",
+                "payment-service"
+              ],
+              "relations": [
+                "DESCRIBES"
+              ],
+              "edges": [
+                {
+                  "source": "ev-28caa122208328df9a5f6ee67d37e7dd",
+                  "type": "DESCRIBES",
+                  "target": "payment-service"
+                }
+              ]
+            },
+            {
+              "evidence_id": "ev-39a08c00d0c2dfa37e748eca88410e38",
+              "affected_incident": null,
+              "nodes": [
+                "ev-39a08c00d0c2dfa37e748eca88410e38",
+                "redis-cache"
+              ],
+              "relations": [
+                "DESCRIBES"
+              ],
+              "edges": [
+                {
+                  "source": "ev-39a08c00d0c2dfa37e748eca88410e38",
+                  "type": "DESCRIBES",
+                  "target": "redis-cache"
+                }
+              ]
+            }
+          ],
+          "decisions": [
+            {
+              "evidence_id": "ev-fe092d4a889baf4ea2d6b11b33702e91",
+              "action": "retained",
+              "reason": "이 근거가 속한 서비스와 팀의 열람 권한을 확인했다."
+            },
+            {
+              "evidence_id": "ev-070f5688409d713649bafbd40a416c47",
+              "action": "retained",
+              "reason": "과거 보고서의 서비스 연결을 확인했다. 현재 원인 판단에는 이번 사건의 로그가 더 필요하다."
+            },
+            {
+              "evidence_id": "ev-28caa122208328df9a5f6ee67d37e7dd",
+              "action": "retained",
+              "reason": "과거 보고서의 서비스 연결을 확인했다. 현재 원인 판단에는 이번 사건의 로그가 더 필요하다."
+            },
+            {
+              "evidence_id": "ev-39a08c00d0c2dfa37e748eca88410e38",
+              "action": "retained",
+              "reason": "과거 보고서의 서비스 연결을 확인했다. 현재 원인 판단에는 이번 사건의 로그가 더 필요하다."
+            }
+          ],
+          "vector": {
+            "ids": [
+              "ev-fe092d4a889baf4ea2d6b11b33702e91",
+              "ev-070f5688409d713649bafbd40a416c47",
+              "ev-28caa122208328df9a5f6ee67d37e7dd",
+              "ev-39a08c00d0c2dfa37e748eca88410e38"
+            ],
+            "sources": [
+              [
+                "scenario/cert_expiry/seed-42/logs/user-service/auth-ERROR.log",
+                "L1-L3"
+              ],
+              [
+                "postmortems/2025-03-30-tls-cert-expiry.md",
+                "L3-L6"
+              ],
+              [
+                "postmortems/2025-09-02-payment-oom.md",
+                "L25-L30"
+              ],
+              [
+                "investigation/cache-restart.md",
+                "L9-L10"
+              ]
+            ],
+            "gold_ranks": [
+              1,
+              null
+            ],
+            "recall": 0.5,
+            "reciprocal_rank": 1.0,
+            "deployment_ranks": []
+          },
+          "graph": {
+            "ids": [
+              "ev-fe092d4a889baf4ea2d6b11b33702e91",
+              "ev-070f5688409d713649bafbd40a416c47",
+              "ev-28caa122208328df9a5f6ee67d37e7dd",
+              "ev-39a08c00d0c2dfa37e748eca88410e38"
+            ],
+            "sources": [
+              [
+                "scenario/cert_expiry/seed-42/logs/user-service/auth-ERROR.log",
+                "L1-L3"
+              ],
+              [
+                "postmortems/2025-03-30-tls-cert-expiry.md",
+                "L3-L6"
+              ],
+              [
+                "postmortems/2025-09-02-payment-oom.md",
+                "L25-L30"
+              ],
+              [
+                "investigation/cache-restart.md",
+                "L9-L10"
+              ]
+            ],
+            "gold_ranks": [
+              1,
+              null
+            ],
+            "recall": 0.5,
+            "reciprocal_rank": 1.0,
+            "deployment_ranks": []
+          }
+        },
+        {
+          "name": "gateway_cause",
+          "question": "POST /login 401 장애의 원인이 배포였나? 게이트웨이 증상과 직접 원인 근거를 찾아줘.",
+          "team": "platform",
+          "relevant": [
+            [
+              "scenario/cert_expiry/seed-42/logs/api-gateway/proxy-ERROR.log",
+              "L1-L3"
+            ],
+            [
+              "scenario/cert_expiry/seed-42/logs/user-service/tls-ERROR.log",
+              "L1-L3"
+            ]
+          ],
+          "causal_probe": true,
+          "must_withhold_cause": false,
+          "graph_paths": [
+            {
+              "evidence_id": "ev-9e0844604c1dfe0468b58bcf0fa91708",
+              "affected_incident": "cert_expiry/seed-42",
+              "nodes": [
+                "ev-9e0844604c1dfe0468b58bcf0fa91708",
+                "api-gateway"
+              ],
+              "relations": [
+                "DESCRIBES"
+              ],
+              "edges": [
+                {
+                  "source": "ev-9e0844604c1dfe0468b58bcf0fa91708",
+                  "type": "DESCRIBES",
+                  "target": "api-gateway"
+                }
+              ]
+            },
+            {
+              "evidence_id": "ev-e7c16a7d9a2408a66c4cde55540416f9",
+              "anchor": "ev-9e0844604c1dfe0468b58bcf0fa91708",
+              "time": "2026-07-03T14:03:04.930984+09:00",
+              "incident": "cert_expiry/seed-42",
+              "kind": "log",
+              "nodes": [
+                "ev-9e0844604c1dfe0468b58bcf0fa91708",
+                "api-gateway",
+                "ev-e7c16a7d9a2408a66c4cde55540416f9"
+              ],
+              "relations": [
+                "DESCRIBES",
+                "OBSERVED_ON"
+              ],
+              "edges": [
+                {
+                  "source": "ev-9e0844604c1dfe0468b58bcf0fa91708",
+                  "type": "DESCRIBES",
+                  "target": "api-gateway"
+                },
+                {
+                  "source": "ev-e7c16a7d9a2408a66c4cde55540416f9",
+                  "type": "OBSERVED_ON",
+                  "target": "api-gateway"
+                }
+              ],
+              "incident_edge": {
+                "source": "cert_expiry/seed-42",
+                "type": "AFFECTS",
+                "target": "api-gateway"
+              }
+            }
+          ],
+          "decisions": [
+            {
+              "evidence_id": "ev-9e0844604c1dfe0468b58bcf0fa91708",
+              "action": "retained",
+              "reason": "과거 보고서의 서비스 연결을 확인했다. 현재 원인 판단에는 이번 사건의 로그가 더 필요하다."
+            },
+            {
+              "evidence_id": "ev-e7c16a7d9a2408a66c4cde55540416f9",
+              "action": "retained",
+              "reason": "영향 서비스와의 경로 및 배포·로그의 시간 범위를 확인해 우선했다."
+            },
+            {
+              "evidence_id": "ev-43e97bfae76a5f0a020ae6fc663077e3",
+              "action": "excluded",
+              "reason": "과거 보고서의 서비스가 이번 장애의 영향 범위(AFFECTS)에 없어 제외했다."
+            },
+            {
+              "evidence_id": "ev-98f21731c1916700e5ca2cb672b02947",
+              "action": "excluded",
+              "reason": "과거 보고서의 서비스가 이번 장애의 영향 범위(AFFECTS)에 없어 제외했다."
+            }
+          ],
+          "vector": {
+            "ids": [
+              "ev-9e0844604c1dfe0468b58bcf0fa91708",
+              "ev-e7c16a7d9a2408a66c4cde55540416f9",
+              "ev-43e97bfae76a5f0a020ae6fc663077e3",
+              "ev-98f21731c1916700e5ca2cb672b02947"
+            ],
+            "sources": [
+              [
+                "postmortems/2024-08-08-bad-config-rollout.md",
+                "L23-L28"
+              ],
+              [
+                "scenario/cert_expiry/seed-42/logs/api-gateway/proxy-ERROR.log",
+                "L1-L3"
+              ],
+              [
+                "postmortems/2025-06-21-disk-full-logging.md",
+                "L20-L23"
+              ],
+              [
+                "postmortems/2025-11-14-db-connection-pool.md",
+                "L32-L36"
+              ]
+            ],
+            "gold_ranks": [
+              2,
+              null
+            ],
+            "recall": 0.5,
+            "reciprocal_rank": 0.5,
+            "deployment_ranks": []
+          },
+          "graph": {
+            "ids": [
+              "ev-9e0844604c1dfe0468b58bcf0fa91708",
+              "ev-e7c16a7d9a2408a66c4cde55540416f9"
+            ],
+            "sources": [
+              [
+                "postmortems/2024-08-08-bad-config-rollout.md",
+                "L23-L28"
+              ],
+              [
+                "scenario/cert_expiry/seed-42/logs/api-gateway/proxy-ERROR.log",
+                "L1-L3"
+              ]
+            ],
+            "gold_ranks": [
+              2,
+              null
+            ],
+            "recall": 0.5,
+            "reciprocal_rank": 0.5,
+            "deployment_ranks": []
+          }
+        },
+        {
+          "name": "payment_fallback",
+          "question": "결제 서비스 사용자 확인 장애 때 캐시된 세션을 사용한 경고 원문은?",
+          "team": "platform",
+          "relevant": [
+            [
+              "scenario/cert_expiry/seed-42/logs/payment-service/auth-WARN.log",
+              "L1-L3"
+            ]
+          ],
+          "causal_probe": false,
+          "must_withhold_cause": false,
+          "graph_paths": [
+            {
+              "evidence_id": "ev-98bbe026699aceb85724131dd144451a",
+              "affected_incident": null,
+              "nodes": [
+                "ev-98bbe026699aceb85724131dd144451a",
+                "dns"
+              ],
+              "relations": [
+                "DESCRIBES"
+              ],
+              "edges": [
+                {
+                  "source": "ev-98bbe026699aceb85724131dd144451a",
+                  "type": "DESCRIBES",
+                  "target": "dns"
+                }
+              ]
+            },
+            {
+              "evidence_id": "ev-3f8f83c9e0455ea71d8078e02e035eef",
+              "affected_incident": null,
+              "nodes": [
+                "ev-3f8f83c9e0455ea71d8078e02e035eef",
+                "inventory-service"
+              ],
+              "relations": [
+                "DESCRIBES"
+              ],
+              "edges": [
+                {
+                  "source": "ev-3f8f83c9e0455ea71d8078e02e035eef",
+                  "type": "DESCRIBES",
+                  "target": "inventory-service"
+                }
+              ]
+            },
+            {
+              "evidence_id": "ev-bbf62ed7a0eda4b46ec6cd29206520a6",
+              "affected_incident": "cert_expiry/seed-42",
+              "nodes": [
+                "ev-bbf62ed7a0eda4b46ec6cd29206520a6",
+                "api-gateway"
+              ],
+              "relations": [
+                "DESCRIBES"
+              ],
+              "edges": [
+                {
+                  "source": "ev-bbf62ed7a0eda4b46ec6cd29206520a6",
+                  "type": "DESCRIBES",
+                  "target": "api-gateway"
+                }
+              ]
+            },
+            {
+              "evidence_id": "ev-6f4982b2673b14ab9a3ae0fbd4a91b5c",
+              "affected_incident": "cert_expiry/seed-42",
+              "nodes": [
+                "ev-6f4982b2673b14ab9a3ae0fbd4a91b5c",
+                "user-service"
+              ],
+              "relations": [
+                "DESCRIBES"
+              ],
+              "edges": [
+                {
+                  "source": "ev-6f4982b2673b14ab9a3ae0fbd4a91b5c",
+                  "type": "DESCRIBES",
+                  "target": "user-service"
+                }
+              ]
+            }
+          ],
+          "decisions": [
+            {
+              "evidence_id": "ev-98bbe026699aceb85724131dd144451a",
+              "action": "retained",
+              "reason": "과거 보고서의 서비스 연결을 확인했다. 현재 원인 판단에는 이번 사건의 로그가 더 필요하다."
+            },
+            {
+              "evidence_id": "ev-3f8f83c9e0455ea71d8078e02e035eef",
+              "action": "retained",
+              "reason": "과거 보고서의 서비스 연결을 확인했다. 현재 원인 판단에는 이번 사건의 로그가 더 필요하다."
+            },
+            {
+              "evidence_id": "ev-bbf62ed7a0eda4b46ec6cd29206520a6",
+              "action": "retained",
+              "reason": "과거 보고서의 서비스 연결을 확인했다. 현재 원인 판단에는 이번 사건의 로그가 더 필요하다."
+            },
+            {
+              "evidence_id": "ev-6f4982b2673b14ab9a3ae0fbd4a91b5c",
+              "action": "retained",
+              "reason": "과거 보고서의 서비스 연결을 확인했다. 현재 원인 판단에는 이번 사건의 로그가 더 필요하다."
+            }
+          ],
+          "vector": {
+            "ids": [
+              "ev-98bbe026699aceb85724131dd144451a",
+              "ev-3f8f83c9e0455ea71d8078e02e035eef",
+              "ev-bbf62ed7a0eda4b46ec6cd29206520a6",
+              "ev-6f4982b2673b14ab9a3ae0fbd4a91b5c"
+            ],
+            "sources": [
+              [
+                "postmortems/2024-12-05-dns-resolution.md",
+                "L8-L10"
+              ],
+              [
+                "postmortems/2025-06-21-disk-full-logging.md",
+                "L32-L36"
+              ],
+              [
+                "postmortems/2024-08-08-bad-config-rollout.md",
+                "L30-L33"
+              ],
+              [
+                "postmortems/2025-03-30-tls-cert-expiry.md",
+                "L32-L36"
+              ]
+            ],
+            "gold_ranks": [
+              null
+            ],
+            "recall": 0.0,
+            "reciprocal_rank": 0,
+            "deployment_ranks": []
+          },
+          "graph": {
+            "ids": [
+              "ev-98bbe026699aceb85724131dd144451a",
+              "ev-3f8f83c9e0455ea71d8078e02e035eef",
+              "ev-bbf62ed7a0eda4b46ec6cd29206520a6",
+              "ev-6f4982b2673b14ab9a3ae0fbd4a91b5c"
+            ],
+            "sources": [
+              [
+                "postmortems/2024-12-05-dns-resolution.md",
+                "L8-L10"
+              ],
+              [
+                "postmortems/2025-06-21-disk-full-logging.md",
+                "L32-L36"
+              ],
+              [
+                "postmortems/2024-08-08-bad-config-rollout.md",
+                "L30-L33"
+              ],
+              [
+                "postmortems/2025-03-30-tls-cert-expiry.md",
+                "L32-L36"
+              ]
+            ],
+            "gold_ranks": [
+              null
+            ],
+            "recall": 0.0,
+            "reciprocal_rank": 0,
+            "deployment_ranks": []
+          }
+        },
+        {
+          "name": "change_presupposition",
+          "question": "로그인 장애가 order-service v2.3.9 배포 때문이라고 볼 수 있나? 현재 인증 실패 근거로 원인을 판단해줘.",
+          "team": "platform",
+          "relevant": [
+            [
+              "scenario/cert_expiry/seed-42/logs/user-service/tls-ERROR.log",
+              "L1-L3"
+            ],
+            [
+              "scenario/cert_expiry/seed-42/logs/user-service/auth-ERROR.log",
+              "L1-L3"
+            ]
+          ],
+          "causal_probe": true,
+          "must_withhold_cause": false,
+          "graph_paths": [
+            {
+              "evidence_id": "ev-070f5688409d713649bafbd40a416c47",
+              "affected_incident": "cert_expiry/seed-42",
+              "nodes": [
+                "ev-070f5688409d713649bafbd40a416c47",
+                "user-service"
+              ],
+              "relations": [
+                "DESCRIBES"
+              ],
+              "edges": [
+                {
+                  "source": "ev-070f5688409d713649bafbd40a416c47",
+                  "type": "DESCRIBES",
+                  "target": "user-service"
+                }
+              ]
+            },
+            {
+              "evidence_id": "ev-f6f8436b8a9d0e53132680b5c8fe992c",
+              "anchor": "ev-070f5688409d713649bafbd40a416c47",
+              "time": "2026-07-03T14:00:08.059443+09:00",
+              "incident": "cert_expiry/seed-42",
+              "kind": "log",
+              "nodes": [
+                "ev-070f5688409d713649bafbd40a416c47",
+                "user-service",
+                "ev-f6f8436b8a9d0e53132680b5c8fe992c"
+              ],
+              "relations": [
+                "DESCRIBES",
+                "OBSERVED_ON"
+              ],
+              "edges": [
+                {
+                  "source": "ev-070f5688409d713649bafbd40a416c47",
+                  "type": "DESCRIBES",
+                  "target": "user-service"
+                },
+                {
+                  "source": "ev-f6f8436b8a9d0e53132680b5c8fe992c",
+                  "type": "OBSERVED_ON",
+                  "target": "user-service"
+                }
+              ],
+              "incident_edge": {
+                "source": "cert_expiry/seed-42",
+                "type": "AFFECTS",
+                "target": "user-service"
+              }
+            },
+            {
+              "evidence_id": "ev-3a31657763100ffd82713150d58c7561",
+              "affected_incident": "cert_expiry/seed-42",
+              "nodes": [
+                "ev-3a31657763100ffd82713150d58c7561",
+                "user-service"
+              ],
+              "relations": [
+                "DESCRIBES"
+              ],
+              "edges": [
+                {
+                  "source": "ev-3a31657763100ffd82713150d58c7561",
+                  "type": "DESCRIBES",
+                  "target": "user-service"
+                }
+              ]
+            },
+            {
+              "evidence_id": "ev-998d598649bbaee5bd92d280a22d4729",
+              "affected_incident": "cert_expiry/seed-42",
+              "nodes": [
+                "ev-998d598649bbaee5bd92d280a22d4729",
+                "payment-service"
+              ],
+              "relations": [
+                "DESCRIBES"
+              ],
+              "edges": [
+                {
+                  "source": "ev-998d598649bbaee5bd92d280a22d4729",
+                  "type": "DESCRIBES",
+                  "target": "payment-service"
+                }
+              ]
+            }
+          ],
+          "decisions": [
+            {
+              "evidence_id": "ev-08c83c51c60696e61c8b6b9458aecb4f",
+              "action": "excluded",
+              "reason": "과거 보고서의 서비스가 이번 장애의 영향 범위(AFFECTS)에 없어 제외했다."
+            },
+            {
+              "evidence_id": "ev-070f5688409d713649bafbd40a416c47",
+              "action": "retained",
+              "reason": "과거 보고서의 서비스 연결을 확인했다. 현재 원인 판단에는 이번 사건의 로그가 더 필요하다."
+            },
+            {
+              "evidence_id": "ev-3a31657763100ffd82713150d58c7561",
+              "action": "retained",
+              "reason": "과거 보고서의 서비스 연결을 확인했다. 현재 원인 판단에는 이번 사건의 로그가 더 필요하다."
+            },
+            {
+              "evidence_id": "ev-998d598649bbaee5bd92d280a22d4729",
+              "action": "retained",
+              "reason": "과거 보고서의 서비스 연결을 확인했다. 현재 원인 판단에는 이번 사건의 로그가 더 필요하다."
+            },
+            {
+              "evidence_id": "ev-f6f8436b8a9d0e53132680b5c8fe992c",
+              "action": "retained",
+              "reason": "영향 서비스와의 경로 및 배포·로그의 시간 범위를 확인해 우선했다."
+            }
+          ],
+          "vector": {
+            "ids": [
+              "ev-08c83c51c60696e61c8b6b9458aecb4f",
+              "ev-070f5688409d713649bafbd40a416c47",
+              "ev-3a31657763100ffd82713150d58c7561",
+              "ev-998d598649bbaee5bd92d280a22d4729"
+            ],
+            "sources": [
+              [
+                "postmortems/2025-11-14-db-connection-pool.md",
+                "L8-L10"
+              ],
+              [
+                "postmortems/2025-03-30-tls-cert-expiry.md",
+                "L3-L6"
+              ],
+              [
+                "postmortems/2024-05-23-rollback-failure.md",
+                "L12-L19"
+              ],
+              [
+                "postmortems/2025-09-02-payment-oom.md",
+                "L8-L10"
+              ]
+            ],
+            "gold_ranks": [
+              null,
+              null
+            ],
+            "recall": 0.0,
+            "reciprocal_rank": 0,
+            "deployment_ranks": []
+          },
+          "graph": {
+            "ids": [
+              "ev-070f5688409d713649bafbd40a416c47",
+              "ev-f6f8436b8a9d0e53132680b5c8fe992c",
+              "ev-3a31657763100ffd82713150d58c7561",
+              "ev-998d598649bbaee5bd92d280a22d4729"
+            ],
+            "sources": [
+              [
+                "postmortems/2025-03-30-tls-cert-expiry.md",
+                "L3-L6"
+              ],
+              [
+                "scenario/cert_expiry/seed-42/logs/user-service/tls-ERROR.log",
+                "L1-L3"
+              ],
+              [
+                "postmortems/2024-05-23-rollback-failure.md",
+                "L12-L19"
+              ],
+              [
+                "postmortems/2025-09-02-payment-oom.md",
+                "L8-L10"
+              ]
+            ],
+            "gold_ranks": [
+              2,
+              null
+            ],
+            "recall": 0.5,
+            "reciprocal_rank": 0.5,
+            "deployment_ranks": []
+          }
+        },
+        {
+          "name": "orders_visible_symptom",
+          "question": "이번 로그인 401은 어떤 배포 때문인가? 주문팀에 공개된 현재 장애 로그로 확인해줘.",
+          "team": "orders",
+          "relevant": [
+            [
+              "scenario/cert_expiry/seed-42/logs/api-gateway/proxy-ERROR.log",
+              "L1-L3"
+            ]
+          ],
+          "causal_probe": true,
+          "must_withhold_cause": true,
+          "graph_paths": [
+            {
+              "evidence_id": "ev-3bef7a0e15ac4254a807eed0684442b0",
+              "affected_incident": null,
+              "nodes": [
+                "ev-3bef7a0e15ac4254a807eed0684442b0",
+                "order-service"
+              ],
+              "relations": [
+                "GUIDES"
+              ],
+              "edges": [
+                {
+                  "source": "ev-3bef7a0e15ac4254a807eed0684442b0",
+                  "type": "GUIDES",
+                  "target": "order-service"
+                }
+              ]
+            },
+            {
+              "evidence_id": "ev-e7c16a7d9a2408a66c4cde55540416f9",
+              "anchor": "ev-de521d0971dd9533c21c0e7c4fd2ebe2",
+              "time": "2026-07-03T14:03:04.930984+09:00",
+              "incident": "cert_expiry/seed-42",
+              "kind": "log",
+              "nodes": [
+                "ev-de521d0971dd9533c21c0e7c4fd2ebe2",
+                "api-gateway",
+                "ev-e7c16a7d9a2408a66c4cde55540416f9"
+              ],
+              "relations": [
+                "DESCRIBES",
+                "OBSERVED_ON"
+              ],
+              "edges": [
+                {
+                  "source": "ev-de521d0971dd9533c21c0e7c4fd2ebe2",
+                  "type": "DESCRIBES",
+                  "target": "api-gateway"
+                },
+                {
+                  "source": "ev-e7c16a7d9a2408a66c4cde55540416f9",
+                  "type": "OBSERVED_ON",
+                  "target": "api-gateway"
+                }
+              ],
+              "incident_edge": {
+                "source": "cert_expiry/seed-42",
+                "type": "AFFECTS",
+                "target": "api-gateway"
+              }
+            },
+            {
+              "evidence_id": "ev-de521d0971dd9533c21c0e7c4fd2ebe2",
+              "affected_incident": "cert_expiry/seed-42",
+              "nodes": [
+                "ev-de521d0971dd9533c21c0e7c4fd2ebe2",
+                "api-gateway"
+              ],
+              "relations": [
+                "DESCRIBES"
+              ],
+              "edges": [
+                {
+                  "source": "ev-de521d0971dd9533c21c0e7c4fd2ebe2",
+                  "type": "DESCRIBES",
+                  "target": "api-gateway"
+                }
+              ]
+            }
+          ],
+          "decisions": [
+            {
+              "evidence_id": "ev-98f21731c1916700e5ca2cb672b02947",
+              "action": "excluded",
+              "reason": "과거 보고서의 서비스가 이번 장애의 영향 범위(AFFECTS)에 없어 제외했다."
+            },
+            {
+              "evidence_id": "ev-3bef7a0e15ac4254a807eed0684442b0",
+              "action": "retained",
+              "reason": "이 근거가 속한 서비스와 팀의 열람 권한을 확인했다."
+            },
+            {
+              "evidence_id": "ev-de521d0971dd9533c21c0e7c4fd2ebe2",
+              "action": "retained",
+              "reason": "과거 보고서의 서비스 연결을 확인했다. 현재 원인 판단에는 이번 사건의 로그가 더 필요하다."
+            },
+            {
+              "evidence_id": "ev-39a08c00d0c2dfa37e748eca88410e38",
+              "action": "excluded",
+              "reason": "과거 보고서의 서비스가 이번 장애의 영향 범위(AFFECTS)에 없어 제외했다."
+            },
+            {
+              "evidence_id": "ev-e7c16a7d9a2408a66c4cde55540416f9",
+              "action": "retained",
+              "reason": "영향 서비스와의 경로 및 배포·로그의 시간 범위를 확인해 우선했다."
+            }
+          ],
+          "vector": {
+            "ids": [
+              "ev-98f21731c1916700e5ca2cb672b02947",
+              "ev-3bef7a0e15ac4254a807eed0684442b0",
+              "ev-de521d0971dd9533c21c0e7c4fd2ebe2",
+              "ev-39a08c00d0c2dfa37e748eca88410e38"
+            ],
+            "sources": [
+              [
+                "postmortems/2025-11-14-db-connection-pool.md",
+                "L32-L36"
+              ],
+              [
+                "demo/runbooks/orders.md",
+                "L3-L3"
+              ],
+              [
+                "postmortems/2024-08-08-bad-config-rollout.md",
+                "L8-L10"
+              ],
+              [
+                "investigation/cache-restart.md",
+                "L9-L10"
+              ]
+            ],
+            "gold_ranks": [
+              null
+            ],
+            "recall": 0.0,
+            "reciprocal_rank": 0,
+            "deployment_ranks": []
+          },
+          "graph": {
+            "ids": [
+              "ev-3bef7a0e15ac4254a807eed0684442b0",
+              "ev-e7c16a7d9a2408a66c4cde55540416f9",
+              "ev-de521d0971dd9533c21c0e7c4fd2ebe2"
+            ],
+            "sources": [
+              [
+                "demo/runbooks/orders.md",
+                "L3-L3"
+              ],
+              [
+                "scenario/cert_expiry/seed-42/logs/api-gateway/proxy-ERROR.log",
+                "L1-L3"
+              ],
+              [
+                "postmortems/2024-08-08-bad-config-rollout.md",
+                "L8-L10"
+              ]
+            ],
+            "gold_ranks": [
+              2
+            ],
+            "recall": 1.0,
+            "reciprocal_rank": 0.5,
+            "deployment_ranks": []
+          }
+        },
+        {
+          "name": "historical_prevention",
+          "question": "2025년 TLS 인증서 만료 장애 보고서에서 D-30 알람과 ACME 자동 갱신 대책을 찾아줘.",
+          "team": "platform",
+          "relevant": [
+            [
+              "postmortems/2025-03-30-tls-cert-expiry.md",
+              "L32-L36"
+            ]
+          ],
+          "causal_probe": false,
+          "must_withhold_cause": false,
+          "graph_paths": [
+            {
+              "evidence_id": "ev-6f4982b2673b14ab9a3ae0fbd4a91b5c",
+              "affected_incident": "cert_expiry/seed-42",
+              "nodes": [
+                "ev-6f4982b2673b14ab9a3ae0fbd4a91b5c",
+                "user-service"
+              ],
+              "relations": [
+                "DESCRIBES"
+              ],
+              "edges": [
+                {
+                  "source": "ev-6f4982b2673b14ab9a3ae0fbd4a91b5c",
+                  "type": "DESCRIBES",
+                  "target": "user-service"
+                }
+              ]
+            },
+            {
+              "evidence_id": "ev-3f8f83c9e0455ea71d8078e02e035eef",
+              "affected_incident": null,
+              "nodes": [
+                "ev-3f8f83c9e0455ea71d8078e02e035eef",
+                "inventory-service"
+              ],
+              "relations": [
+                "DESCRIBES"
+              ],
+              "edges": [
+                {
+                  "source": "ev-3f8f83c9e0455ea71d8078e02e035eef",
+                  "type": "DESCRIBES",
+                  "target": "inventory-service"
+                }
+              ]
+            },
+            {
+              "evidence_id": "ev-9e0844604c1dfe0468b58bcf0fa91708",
+              "affected_incident": "cert_expiry/seed-42",
+              "nodes": [
+                "ev-9e0844604c1dfe0468b58bcf0fa91708",
+                "api-gateway"
+              ],
+              "relations": [
+                "DESCRIBES"
+              ],
+              "edges": [
+                {
+                  "source": "ev-9e0844604c1dfe0468b58bcf0fa91708",
+                  "type": "DESCRIBES",
+                  "target": "api-gateway"
+                }
+              ]
+            },
+            {
+              "evidence_id": "ev-2f637f088ae455e978e5993a4475c085",
+              "affected_incident": null,
+              "nodes": [
+                "ev-2f637f088ae455e978e5993a4475c085",
+                "redis-cache"
+              ],
+              "relations": [
+                "DESCRIBES"
+              ],
+              "edges": [
+                {
+                  "source": "ev-2f637f088ae455e978e5993a4475c085",
+                  "type": "DESCRIBES",
+                  "target": "redis-cache"
+                }
+              ]
+            }
+          ],
+          "decisions": [
+            {
+              "evidence_id": "ev-6f4982b2673b14ab9a3ae0fbd4a91b5c",
+              "action": "retained",
+              "reason": "과거 보고서의 서비스 연결을 확인했다. 현재 원인 판단에는 이번 사건의 로그가 더 필요하다."
+            },
+            {
+              "evidence_id": "ev-3f8f83c9e0455ea71d8078e02e035eef",
+              "action": "retained",
+              "reason": "과거 보고서의 서비스 연결을 확인했다. 현재 원인 판단에는 이번 사건의 로그가 더 필요하다."
+            },
+            {
+              "evidence_id": "ev-9e0844604c1dfe0468b58bcf0fa91708",
+              "action": "retained",
+              "reason": "과거 보고서의 서비스 연결을 확인했다. 현재 원인 판단에는 이번 사건의 로그가 더 필요하다."
+            },
+            {
+              "evidence_id": "ev-2f637f088ae455e978e5993a4475c085",
+              "action": "retained",
+              "reason": "과거 보고서의 서비스 연결을 확인했다. 현재 원인 판단에는 이번 사건의 로그가 더 필요하다."
+            }
+          ],
+          "vector": {
+            "ids": [
+              "ev-6f4982b2673b14ab9a3ae0fbd4a91b5c",
+              "ev-3f8f83c9e0455ea71d8078e02e035eef",
+              "ev-9e0844604c1dfe0468b58bcf0fa91708",
+              "ev-2f637f088ae455e978e5993a4475c085"
+            ],
+            "sources": [
+              [
+                "postmortems/2025-03-30-tls-cert-expiry.md",
+                "L32-L36"
+              ],
+              [
+                "postmortems/2025-06-21-disk-full-logging.md",
+                "L32-L36"
+              ],
+              [
+                "postmortems/2024-08-08-bad-config-rollout.md",
+                "L23-L28"
+              ],
+              [
+                "postmortems/2025-01-17-cache-stampede.md",
+                "L32-L36"
+              ]
+            ],
+            "gold_ranks": [
+              1
+            ],
+            "recall": 1.0,
+            "reciprocal_rank": 1.0,
+            "deployment_ranks": []
+          },
+          "graph": {
+            "ids": [
+              "ev-6f4982b2673b14ab9a3ae0fbd4a91b5c",
+              "ev-3f8f83c9e0455ea71d8078e02e035eef",
+              "ev-9e0844604c1dfe0468b58bcf0fa91708",
+              "ev-2f637f088ae455e978e5993a4475c085"
+            ],
+            "sources": [
+              [
+                "postmortems/2025-03-30-tls-cert-expiry.md",
+                "L32-L36"
+              ],
+              [
+                "postmortems/2025-06-21-disk-full-logging.md",
+                "L32-L36"
+              ],
+              [
+                "postmortems/2024-08-08-bad-config-rollout.md",
+                "L23-L28"
+              ],
+              [
+                "postmortems/2025-01-17-cache-stampede.md",
+                "L32-L36"
+              ]
+            ],
+            "gold_ranks": [
+              1
+            ],
+            "recall": 1.0,
+            "reciprocal_rank": 1.0,
+            "deployment_ranks": []
+          }
+        }
+      ]
+    }
+  },
+  "db_regression": {
+    "baseline_sha256": "439fa47aaa9d6b74b166bc797cb25fbc320ec0a1dc361c65414fa896ecfc1716",
+    "baseline_summary": {
+      "vector": {
+        "recall": 0.8571428571428571,
+        "reciprocal_rank": 0.9285714285714286,
+        "culprit_questions": 4,
+        "culprit_hit_at_k": 0.75,
+        "culprit_mrr": 0.4375
+      },
+      "graph": {
+        "recall": 1.0,
+        "reciprocal_rank": 1.0,
+        "culprit_questions": 4,
+        "culprit_hit_at_k": 1,
+        "culprit_mrr": 0.75
+      }
+    },
+    "cases": {
+      "default_order_latency": {
+        "vector": {
+          "same_ranked_sources": true,
+          "same_ranked_ids": true,
+          "recall_delta": 0.0,
+          "reciprocal_rank_delta": 0.0
+        },
+        "graph": {
+          "same_ranked_sources": true,
+          "same_ranked_ids": true,
+          "recall_delta": 0.0,
+          "reciprocal_rank_delta": 0.0
+        }
+      },
+      "gateway_to_change": {
+        "vector": {
+          "same_ranked_sources": true,
+          "same_ranked_ids": true,
+          "recall_delta": 0.0,
+          "reciprocal_rank_delta": 0.0
+        },
+        "graph": {
+          "same_ranked_sources": true,
+          "same_ranked_ids": true,
+          "recall_delta": 0.0,
+          "reciprocal_rank_delta": 0.0
+        }
+      },
+      "pool_error": {
+        "vector": {
+          "same_ranked_sources": true,
+          "same_ranked_ids": true,
+          "recall_delta": 0.0,
+          "reciprocal_rank_delta": 0.0
+        },
+        "graph": {
+          "same_ranked_sources": true,
+          "same_ranked_ids": true,
+          "recall_delta": 0.0,
+          "reciprocal_rank_delta": 0.0
+        }
+      },
+      "db_query": {
+        "vector": {
+          "same_ranked_sources": true,
+          "same_ranked_ids": true,
+          "recall_delta": 0.0,
+          "reciprocal_rank_delta": 0.0
+        },
+        "graph": {
+          "same_ranked_sources": true,
+          "same_ranked_ids": true,
+          "recall_delta": 0.0,
+          "reciprocal_rank_delta": 0.0
+        }
+      },
+      "circuit_to_change": {
+        "vector": {
+          "same_ranked_sources": true,
+          "same_ranked_ids": true,
+          "recall_delta": 0.0,
+          "reciprocal_rank_delta": 0.0
+        },
+        "graph": {
+          "same_ranked_sources": true,
+          "same_ranked_ids": true,
+          "recall_delta": 0.0,
+          "reciprocal_rank_delta": 0.0
+        }
+      },
+      "historical_plan": {
+        "vector": {
+          "same_ranked_sources": true,
+          "same_ranked_ids": true,
+          "recall_delta": 0.0,
+          "reciprocal_rank_delta": 0.0
+        },
+        "graph": {
+          "same_ranked_sources": true,
+          "same_ranked_ids": true,
+          "recall_delta": 0.0,
+          "reciprocal_rank_delta": 0.0
+        }
+      },
+      "rollout_record": {
+        "vector": {
+          "same_ranked_sources": true,
+          "same_ranked_ids": true,
+          "recall_delta": 0.0,
+          "reciprocal_rank_delta": 0.0
+        },
+        "graph": {
+          "same_ranked_sources": true,
+          "same_ranked_ids": true,
+          "recall_delta": 0.0,
+          "reciprocal_rank_delta": 0.0
+        }
+      }
+    }
+  },
+  "latency": {
+    "db_pool_exhaustion": {
+      "vector": {
+        "n": 35,
+        "p50_ms": 2.730518,
+        "p95_ms": 7.443013,
+        "samples": [
+          {
+            "trial": 1,
+            "case": "gateway_to_change",
+            "ms": 2.320309
+          },
+          {
+            "trial": 1,
+            "case": "default_order_latency",
+            "ms": 2.836646
+          },
+          {
+            "trial": 1,
+            "case": "circuit_to_change",
+            "ms": 2.730518
+          },
+          {
+            "trial": 1,
+            "case": "db_query",
+            "ms": 2.499475
+          },
+          {
+            "trial": 1,
+            "case": "pool_error",
+            "ms": 2.670399
+          },
+          {
+            "trial": 1,
+            "case": "historical_plan",
+            "ms": 2.622739
+          },
+          {
+            "trial": 1,
+            "case": "rollout_record",
+            "ms": 2.25395
+          },
+          {
+            "trial": 2,
+            "case": "rollout_record",
+            "ms": 2.085991
+          },
+          {
+            "trial": 2,
+            "case": "gateway_to_change",
+            "ms": 2.108674
+          },
+          {
+            "trial": 2,
+            "case": "circuit_to_change",
+            "ms": 2.631671
+          },
+          {
+            "trial": 2,
+            "case": "historical_plan",
+            "ms": 6.715541
+          },
+          {
+            "trial": 2,
+            "case": "db_query",
+            "ms": 8.030847
+          },
+          {
+            "trial": 2,
+            "case": "default_order_latency",
+            "ms": 3.048992
+          },
+          {
+            "trial": 2,
+            "case": "pool_error",
+            "ms": 2.378035
+          },
+          {
+            "trial": 3,
+            "case": "db_query",
+            "ms": 2.565188
+          },
+          {
+            "trial": 3,
+            "case": "rollout_record",
+            "ms": 2.181252
+          },
+          {
+            "trial": 3,
+            "case": "pool_error",
+            "ms": 2.682287
+          },
+          {
+            "trial": 3,
+            "case": "circuit_to_change",
+            "ms": 3.516306
+          },
+          {
+            "trial": 3,
+            "case": "gateway_to_change",
+            "ms": 7.443013
+          },
+          {
+            "trial": 3,
+            "case": "historical_plan",
+            "ms": 2.95328
+          },
+          {
+            "trial": 3,
+            "case": "default_order_latency",
+            "ms": 4.103369
+          },
+          {
+            "trial": 4,
+            "case": "circuit_to_change",
+            "ms": 2.96009
+          },
+          {
+            "trial": 4,
+            "case": "db_query",
+            "ms": 2.611942
+          },
+          {
+            "trial": 4,
+            "case": "pool_error",
+            "ms": 2.789477
+          },
+          {
+            "trial": 4,
+            "case": "gateway_to_change",
+            "ms": 3.51879
+          },
+          {
+            "trial": 4,
+            "case": "default_order_latency",
+            "ms": 2.935443
+          },
+          {
+            "trial": 4,
+            "case": "rollout_record",
+            "ms": 2.747234
+          },
+          {
+            "trial": 4,
+            "case": "historical_plan",
+            "ms": 2.358926
+          },
+          {
+            "trial": 5,
+            "case": "historical_plan",
+            "ms": 2.238337
+          },
+          {
+            "trial": 5,
+            "case": "default_order_latency",
+            "ms": 2.449411
+          },
+          {
+            "trial": 5,
+            "case": "db_query",
+            "ms": 3.053709
+          },
+          {
+            "trial": 5,
+            "case": "rollout_record",
+            "ms": 2.884608
+          },
+          {
+            "trial": 5,
+            "case": "gateway_to_change",
+            "ms": 2.188103
+          },
+          {
+            "trial": 5,
+            "case": "circuit_to_change",
+            "ms": 3.107068
+          },
+          {
+            "trial": 5,
+            "case": "pool_error",
+            "ms": 2.836045
+          }
+        ]
+      },
+      "graph": {
+        "n": 35,
+        "p50_ms": 9.207936,
+        "p95_ms": 17.250691,
+        "samples": [
+          {
+            "trial": 1,
+            "case": "gateway_to_change",
+            "ms": 9.882459
+          },
+          {
+            "trial": 1,
+            "case": "default_order_latency",
+            "ms": 10.626815
+          },
+          {
+            "trial": 1,
+            "case": "circuit_to_change",
+            "ms": 12.095829
+          },
+          {
+            "trial": 1,
+            "case": "db_query",
+            "ms": 4.052614
+          },
+          {
+            "trial": 1,
+            "case": "pool_error",
+            "ms": 3.689544
+          },
+          {
+            "trial": 1,
+            "case": "historical_plan",
+            "ms": 4.267492
+          },
+          {
+            "trial": 1,
+            "case": "rollout_record",
+            "ms": 9.683704
+          },
+          {
+            "trial": 2,
+            "case": "rollout_record",
+            "ms": 9.868112
+          },
+          {
+            "trial": 2,
+            "case": "gateway_to_change",
+            "ms": 8.530971
+          },
+          {
+            "trial": 2,
+            "case": "circuit_to_change",
+            "ms": 8.688805
+          },
+          {
+            "trial": 2,
+            "case": "historical_plan",
+            "ms": 100.110491
+          },
+          {
+            "trial": 2,
+            "case": "db_query",
+            "ms": 5.045239
+          },
+          {
+            "trial": 2,
+            "case": "default_order_latency",
+            "ms": 12.528452
+          },
+          {
+            "trial": 2,
+            "case": "pool_error",
+            "ms": 5.360618
+          },
+          {
+            "trial": 3,
+            "case": "db_query",
+            "ms": 3.798636
+          },
+          {
+            "trial": 3,
+            "case": "rollout_record",
+            "ms": 9.513731
+          },
+          {
+            "trial": 3,
+            "case": "pool_error",
+            "ms": 5.129875
+          },
+          {
+            "trial": 3,
+            "case": "circuit_to_change",
+            "ms": 12.4929
+          },
+          {
+            "trial": 3,
+            "case": "gateway_to_change",
+            "ms": 14.093614
+          },
+          {
+            "trial": 3,
+            "case": "historical_plan",
+            "ms": 6.265664
+          },
+          {
+            "trial": 3,
+            "case": "default_order_latency",
+            "ms": 17.250691
+          },
+          {
+            "trial": 4,
+            "case": "circuit_to_change",
+            "ms": 13.021975
+          },
+          {
+            "trial": 4,
+            "case": "db_query",
+            "ms": 3.809012
+          },
+          {
+            "trial": 4,
+            "case": "pool_error",
+            "ms": 4.267543
+          },
+          {
+            "trial": 4,
+            "case": "gateway_to_change",
+            "ms": 10.348772
+          },
+          {
+            "trial": 4,
+            "case": "default_order_latency",
+            "ms": 9.594502
+          },
+          {
+            "trial": 4,
+            "case": "rollout_record",
+            "ms": 10.195384
+          },
+          {
+            "trial": 4,
+            "case": "historical_plan",
+            "ms": 3.859206
+          },
+          {
+            "trial": 5,
+            "case": "historical_plan",
+            "ms": 4.333
+          },
+          {
+            "trial": 5,
+            "case": "default_order_latency",
+            "ms": 8.646672
+          },
+          {
+            "trial": 5,
+            "case": "db_query",
+            "ms": 4.147505
+          },
+          {
+            "trial": 5,
+            "case": "rollout_record",
+            "ms": 9.207936
+          },
+          {
+            "trial": 5,
+            "case": "gateway_to_change",
+            "ms": 9.42608
+          },
+          {
+            "trial": 5,
+            "case": "circuit_to_change",
+            "ms": 10.766854
+          },
+          {
+            "trial": 5,
+            "case": "pool_error",
+            "ms": 4.765583
+          }
+        ]
+      }
+    },
+    "cert_expiry": {
+      "vector": {
+        "n": 35,
+        "p50_ms": 2.77821,
+        "p95_ms": 5.77598,
+        "samples": [
+          {
+            "trial": 1,
+            "case": "payment_fallback",
+            "ms": 2.9736
+          },
+          {
+            "trial": 1,
+            "case": "gateway_cause",
+            "ms": 2.437874
+          },
+          {
+            "trial": 1,
+            "case": "change_presupposition",
+            "ms": 3.192395
+          },
+          {
+            "trial": 1,
+            "case": "historical_prevention",
+            "ms": 2.522299
+          },
+          {
+            "trial": 1,
+            "case": "tls_handshake",
+            "ms": 2.234411
+          },
+          {
+            "trial": 1,
+            "case": "orders_visible_symptom",
+            "ms": 2.162734
+          },
+          {
+            "trial": 1,
+            "case": "token_chain",
+            "ms": 2.290254
+          },
+          {
+            "trial": 2,
+            "case": "token_chain",
+            "ms": 2.155724
+          },
+          {
+            "trial": 2,
+            "case": "gateway_cause",
+            "ms": 2.909755
+          },
+          {
+            "trial": 2,
+            "case": "change_presupposition",
+            "ms": 5.77598
+          },
+          {
+            "trial": 2,
+            "case": "historical_prevention",
+            "ms": 2.606474
+          },
+          {
+            "trial": 2,
+            "case": "orders_visible_symptom",
+            "ms": 2.521398
+          },
+          {
+            "trial": 2,
+            "case": "tls_handshake",
+            "ms": 2.77821
+          },
+          {
+            "trial": 2,
+            "case": "payment_fallback",
+            "ms": 2.486086
+          },
+          {
+            "trial": 3,
+            "case": "payment_fallback",
+            "ms": 2.421259
+          },
+          {
+            "trial": 3,
+            "case": "tls_handshake",
+            "ms": 2.538193
+          },
+          {
+            "trial": 3,
+            "case": "change_presupposition",
+            "ms": 2.866491
+          },
+          {
+            "trial": 3,
+            "case": "orders_visible_symptom",
+            "ms": 5.982662
+          },
+          {
+            "trial": 3,
+            "case": "gateway_cause",
+            "ms": 3.088541
+          },
+          {
+            "trial": 3,
+            "case": "token_chain",
+            "ms": 2.840992
+          },
+          {
+            "trial": 3,
+            "case": "historical_prevention",
+            "ms": 2.811809
+          },
+          {
+            "trial": 4,
+            "case": "historical_prevention",
+            "ms": 3.286435
+          },
+          {
+            "trial": 4,
+            "case": "payment_fallback",
+            "ms": 2.853892
+          },
+          {
+            "trial": 4,
+            "case": "orders_visible_symptom",
+            "ms": 2.705311
+          },
+          {
+            "trial": 4,
+            "case": "token_chain",
+            "ms": 2.937156
+          },
+          {
+            "trial": 4,
+            "case": "tls_handshake",
+            "ms": 2.706694
+          },
+          {
+            "trial": 4,
+            "case": "change_presupposition",
+            "ms": 4.681709
+          },
+          {
+            "trial": 4,
+            "case": "gateway_cause",
+            "ms": 2.494848
+          },
+          {
+            "trial": 5,
+            "case": "gateway_cause",
+            "ms": 2.264356
+          },
+          {
+            "trial": 5,
+            "case": "token_chain",
+            "ms": 2.539875
+          },
+          {
+            "trial": 5,
+            "case": "change_presupposition",
+            "ms": 3.20876
+          },
+          {
+            "trial": 5,
+            "case": "orders_visible_symptom",
+            "ms": 2.876796
+          },
+          {
+            "trial": 5,
+            "case": "tls_handshake",
+            "ms": 3.080409
+          },
+          {
+            "trial": 5,
+            "case": "historical_prevention",
+            "ms": 2.989733
+          },
+          {
+            "trial": 5,
+            "case": "payment_fallback",
+            "ms": 2.539835
+          }
+        ]
+      },
+      "graph": {
+        "n": 35,
+        "p50_ms": 5.223674,
+        "p95_ms": 11.892051,
+        "samples": [
+          {
+            "trial": 1,
+            "case": "payment_fallback",
+            "ms": 3.675764
+          },
+          {
+            "trial": 1,
+            "case": "gateway_cause",
+            "ms": 7.745824
+          },
+          {
+            "trial": 1,
+            "case": "change_presupposition",
+            "ms": 8.59127
+          },
+          {
+            "trial": 1,
+            "case": "historical_prevention",
+            "ms": 3.893737
+          },
+          {
+            "trial": 1,
+            "case": "tls_handshake",
+            "ms": 3.69341
+          },
+          {
+            "trial": 1,
+            "case": "orders_visible_symptom",
+            "ms": 6.510657
+          },
+          {
+            "trial": 1,
+            "case": "token_chain",
+            "ms": 3.675403
+          },
+          {
+            "trial": 2,
+            "case": "token_chain",
+            "ms": 3.528555
+          },
+          {
+            "trial": 2,
+            "case": "gateway_cause",
+            "ms": 13.545173
+          },
+          {
+            "trial": 2,
+            "case": "change_presupposition",
+            "ms": 11.892051
+          },
+          {
+            "trial": 2,
+            "case": "historical_prevention",
+            "ms": 4.657162
+          },
+          {
+            "trial": 2,
+            "case": "orders_visible_symptom",
+            "ms": 10.335522
+          },
+          {
+            "trial": 2,
+            "case": "tls_handshake",
+            "ms": 4.263337
+          },
+          {
+            "trial": 2,
+            "case": "payment_fallback",
+            "ms": 3.797785
+          },
+          {
+            "trial": 3,
+            "case": "payment_fallback",
+            "ms": 3.730705
+          },
+          {
+            "trial": 3,
+            "case": "tls_handshake",
+            "ms": 3.7205
+          },
+          {
+            "trial": 3,
+            "case": "change_presupposition",
+            "ms": 9.364093
+          },
+          {
+            "trial": 3,
+            "case": "orders_visible_symptom",
+            "ms": 10.868545
+          },
+          {
+            "trial": 3,
+            "case": "gateway_cause",
+            "ms": 9.988106
+          },
+          {
+            "trial": 3,
+            "case": "token_chain",
+            "ms": 5.035695
+          },
+          {
+            "trial": 3,
+            "case": "historical_prevention",
+            "ms": 5.223674
+          },
+          {
+            "trial": 4,
+            "case": "historical_prevention",
+            "ms": 5.421879
+          },
+          {
+            "trial": 4,
+            "case": "payment_fallback",
+            "ms": 5.680433
+          },
+          {
+            "trial": 4,
+            "case": "orders_visible_symptom",
+            "ms": 9.47982
+          },
+          {
+            "trial": 4,
+            "case": "token_chain",
+            "ms": 4.436774
+          },
+          {
+            "trial": 4,
+            "case": "tls_handshake",
+            "ms": 4.027316
+          },
+          {
+            "trial": 4,
+            "case": "change_presupposition",
+            "ms": 10.664502
+          },
+          {
+            "trial": 4,
+            "case": "gateway_cause",
+            "ms": 8.01256
+          },
+          {
+            "trial": 5,
+            "case": "gateway_cause",
+            "ms": 7.199631
+          },
+          {
+            "trial": 5,
+            "case": "token_chain",
+            "ms": 3.840629
+          },
+          {
+            "trial": 5,
+            "case": "change_presupposition",
+            "ms": 8.861341
+          },
+          {
+            "trial": 5,
+            "case": "orders_visible_symptom",
+            "ms": 7.072512
+          },
+          {
+            "trial": 5,
+            "case": "tls_handshake",
+            "ms": 3.811275
+          },
+          {
+            "trial": 5,
+            "case": "historical_prevention",
+            "ms": 4.249367
+          },
+          {
+            "trial": 5,
+            "case": "payment_fallback",
+            "ms": 3.769603
+          }
+        ]
+      }
+    }
+  },
+  "causal_probes": {
+    "gateway_cause": {
+      "status": "completed",
+      "hypotheses": [
+        {
+          "title": "user-service의 상위 서버 인증서 만료",
+          "description": "user-service에서 상대 서버의 인증서 만료로 TLS 핸드셰이크가 실패했다. 같은 서비스에서 TLS 오류로 토큰 발급도 실패했다. api-gateway에서도 로그인 요청에 대한 401 응답을 관찰했다.",
+          "evidence_ids": [
+            "ev-f6f8436b8a9d0e53132680b5c8fe992c",
+            "ev-fe092d4a889baf4ea2d6b11b33702e91",
+            "ev-e7c16a7d9a2408a66c4cde55540416f9"
+          ],
+          "paths": [
+            {
+              "evidence_id": "ev-f6f8436b8a9d0e53132680b5c8fe992c",
+              "affected_incident": "cert_expiry/seed-42",
+              "nodes": [
+                "ev-f6f8436b8a9d0e53132680b5c8fe992c",
+                "user-service"
+              ],
+              "relations": [
+                "OBSERVED_ON"
+              ],
+              "edges": [
+                {
+                  "source": "ev-f6f8436b8a9d0e53132680b5c8fe992c",
+                  "type": "OBSERVED_ON",
+                  "target": "user-service"
+                }
+              ]
+            },
+            {
+              "evidence_id": "ev-fe092d4a889baf4ea2d6b11b33702e91",
+              "affected_incident": "cert_expiry/seed-42",
+              "nodes": [
+                "ev-fe092d4a889baf4ea2d6b11b33702e91",
+                "user-service"
+              ],
+              "relations": [
+                "OBSERVED_ON"
+              ],
+              "edges": [
+                {
+                  "source": "ev-fe092d4a889baf4ea2d6b11b33702e91",
+                  "type": "OBSERVED_ON",
+                  "target": "user-service"
+                }
+              ]
+            },
+            {
+              "evidence_id": "ev-e7c16a7d9a2408a66c4cde55540416f9",
+              "affected_incident": "cert_expiry/seed-42",
+              "nodes": [
+                "ev-e7c16a7d9a2408a66c4cde55540416f9",
+                "api-gateway"
+              ],
+              "relations": [
+                "OBSERVED_ON"
+              ],
+              "edges": [
+                {
+                  "source": "ev-e7c16a7d9a2408a66c4cde55540416f9",
+                  "type": "OBSERVED_ON",
+                  "target": "api-gateway"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "tool_calls": [
+        {
+          "turn": 1,
+          "name": "search_logs"
+        },
+        {
+          "turn": 1,
+          "name": "search_deployments"
+        },
+        {
+          "turn": 2,
+          "name": "search_reports"
+        },
+        {
+          "turn": 3,
+          "name": "submit_investigation"
+        }
+      ],
+      "cited_evidence": [
+        {
+          "kind": "log",
+          "title": "api-gateway proxy ERROR",
+          "text": "2026-07-03T14:03:04.930984+09:00 ERROR [proxy] Upstream 401 from user-service POST /login\n2026-07-03T14:03:19.421908+09:00 ERROR [proxy] Upstream 401 from user-service POST /login\n2026-07-03T14:03:30.410899+09:00 ERROR [proxy] Upstream 401 from user-service POST /login",
+          "source": "scenario/cert_expiry/seed-42/logs/api-gateway/proxy-ERROR.log",
+          "version": "sha256:8b9305e0951f3ef2d61fb024fe79a61aec8a3a9d59b8f80e5c07f1dba925b16f",
+          "locator": "L1-L3",
+          "service": "api-gateway",
+          "teams": [
+            "orders",
+            "platform"
+          ],
+          "origin": "scenario",
+          "incident": "cert_expiry/seed-42",
+          "observed_at": "2026-07-03T14:03:04.930984+09:00",
+          "end_at": "2026-07-03T14:14:42.258961+09:00",
+          "source_lines": 44,
+          "id": "ev-e7c16a7d9a2408a66c4cde55540416f9"
+        },
+        {
+          "kind": "log",
+          "title": "user-service tls ERROR",
+          "text": "2026-07-03T14:00:08.059443+09:00 ERROR [tls] SSL handshake failed with auth-provider: certificate expired (notAfter=2026-07-03T05:00:00Z)\n2026-07-03T14:00:10.177123+09:00 ERROR [tls] SSL handshake failed with auth-provider: certificate expired (notAfter=2026-07-03T05:00:00Z)\n2026-07-03T14:00:20.974932+09:00 ERROR [tls] SSL handshake failed with auth-provider: certificate expired (notAfter=2026-07-03T05:00:00Z)",
+          "source": "scenario/cert_expiry/seed-42/logs/user-service/tls-ERROR.log",
+          "version": "sha256:3e8e0933ee1d2d0ec2241d114b9a881a5f65d531ab40d48610ca4e1eb5cad687",
+          "locator": "L1-L3",
+          "service": "user-service",
+          "teams": [
+            "platform"
+          ],
+          "origin": "scenario",
+          "incident": "cert_expiry/seed-42",
+          "observed_at": "2026-07-03T14:00:08.059443+09:00",
+          "end_at": "2026-07-03T14:14:38.443427+09:00",
+          "source_lines": 56,
+          "id": "ev-f6f8436b8a9d0e53132680b5c8fe992c"
+        },
+        {
+          "kind": "log",
+          "title": "user-service auth ERROR",
+          "text": "2026-07-03T14:01:11.933076+09:00 ERROR [auth] Token issuance failed: upstream TLS error for realm=main\n2026-07-03T14:01:18.220514+09:00 ERROR [auth] Token issuance failed: upstream TLS error for realm=main\n2026-07-03T14:01:23.752807+09:00 ERROR [auth] Token issuance failed: upstream TLS error for realm=main",
+          "source": "scenario/cert_expiry/seed-42/logs/user-service/auth-ERROR.log",
+          "version": "sha256:6f0a05e1658e4b9e459361201720909a1da113dfbe99f959e5f7aa366bdd38e8",
+          "locator": "L1-L3",
+          "service": "user-service",
+          "teams": [
+            "platform"
+          ],
+          "origin": "scenario",
+          "incident": "cert_expiry/seed-42",
+          "observed_at": "2026-07-03T14:01:11.933076+09:00",
+          "end_at": "2026-07-03T14:12:47.375379+09:00",
+          "source_lines": 30,
+          "id": "ev-fe092d4a889baf4ea2d6b11b33702e91"
+        }
+      ]
+    },
+    "change_presupposition": {
+      "status": "completed",
+      "hypotheses": [
+        {
+          "title": "user-service의 상위 서버 인증서 만료",
+          "description": "user-service에서 상대 서버의 인증서 만료로 TLS 핸드셰이크가 실패했다. 같은 서비스에서 TLS 오류로 토큰 발급도 실패했다. api-gateway에서도 로그인 요청에 대한 401 응답을 관찰했다.",
+          "evidence_ids": [
+            "ev-f6f8436b8a9d0e53132680b5c8fe992c",
+            "ev-fe092d4a889baf4ea2d6b11b33702e91",
+            "ev-e7c16a7d9a2408a66c4cde55540416f9"
+          ],
+          "paths": [
+            {
+              "evidence_id": "ev-f6f8436b8a9d0e53132680b5c8fe992c",
+              "affected_incident": "cert_expiry/seed-42",
+              "nodes": [
+                "ev-f6f8436b8a9d0e53132680b5c8fe992c",
+                "user-service"
+              ],
+              "relations": [
+                "OBSERVED_ON"
+              ],
+              "edges": [
+                {
+                  "source": "ev-f6f8436b8a9d0e53132680b5c8fe992c",
+                  "type": "OBSERVED_ON",
+                  "target": "user-service"
+                }
+              ]
+            },
+            {
+              "evidence_id": "ev-fe092d4a889baf4ea2d6b11b33702e91",
+              "affected_incident": "cert_expiry/seed-42",
+              "nodes": [
+                "ev-fe092d4a889baf4ea2d6b11b33702e91",
+                "user-service"
+              ],
+              "relations": [
+                "OBSERVED_ON"
+              ],
+              "edges": [
+                {
+                  "source": "ev-fe092d4a889baf4ea2d6b11b33702e91",
+                  "type": "OBSERVED_ON",
+                  "target": "user-service"
+                }
+              ]
+            },
+            {
+              "evidence_id": "ev-e7c16a7d9a2408a66c4cde55540416f9",
+              "affected_incident": "cert_expiry/seed-42",
+              "nodes": [
+                "ev-e7c16a7d9a2408a66c4cde55540416f9",
+                "api-gateway"
+              ],
+              "relations": [
+                "OBSERVED_ON"
+              ],
+              "edges": [
+                {
+                  "source": "ev-e7c16a7d9a2408a66c4cde55540416f9",
+                  "type": "OBSERVED_ON",
+                  "target": "api-gateway"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "tool_calls": [
+        {
+          "turn": 1,
+          "name": "search_logs"
+        },
+        {
+          "turn": 1,
+          "name": "search_deployments"
+        },
+        {
+          "turn": 2,
+          "name": "search_reports"
+        },
+        {
+          "turn": 3,
+          "name": "submit_investigation"
+        }
+      ],
+      "cited_evidence": [
+        {
+          "kind": "log",
+          "title": "user-service tls ERROR",
+          "text": "2026-07-03T14:00:08.059443+09:00 ERROR [tls] SSL handshake failed with auth-provider: certificate expired (notAfter=2026-07-03T05:00:00Z)\n2026-07-03T14:00:10.177123+09:00 ERROR [tls] SSL handshake failed with auth-provider: certificate expired (notAfter=2026-07-03T05:00:00Z)\n2026-07-03T14:00:20.974932+09:00 ERROR [tls] SSL handshake failed with auth-provider: certificate expired (notAfter=2026-07-03T05:00:00Z)",
+          "source": "scenario/cert_expiry/seed-42/logs/user-service/tls-ERROR.log",
+          "version": "sha256:3e8e0933ee1d2d0ec2241d114b9a881a5f65d531ab40d48610ca4e1eb5cad687",
+          "locator": "L1-L3",
+          "service": "user-service",
+          "teams": [
+            "platform"
+          ],
+          "origin": "scenario",
+          "incident": "cert_expiry/seed-42",
+          "observed_at": "2026-07-03T14:00:08.059443+09:00",
+          "end_at": "2026-07-03T14:14:38.443427+09:00",
+          "source_lines": 56,
+          "id": "ev-f6f8436b8a9d0e53132680b5c8fe992c"
+        },
+        {
+          "kind": "log",
+          "title": "user-service auth ERROR",
+          "text": "2026-07-03T14:01:11.933076+09:00 ERROR [auth] Token issuance failed: upstream TLS error for realm=main\n2026-07-03T14:01:18.220514+09:00 ERROR [auth] Token issuance failed: upstream TLS error for realm=main\n2026-07-03T14:01:23.752807+09:00 ERROR [auth] Token issuance failed: upstream TLS error for realm=main",
+          "source": "scenario/cert_expiry/seed-42/logs/user-service/auth-ERROR.log",
+          "version": "sha256:6f0a05e1658e4b9e459361201720909a1da113dfbe99f959e5f7aa366bdd38e8",
+          "locator": "L1-L3",
+          "service": "user-service",
+          "teams": [
+            "platform"
+          ],
+          "origin": "scenario",
+          "incident": "cert_expiry/seed-42",
+          "observed_at": "2026-07-03T14:01:11.933076+09:00",
+          "end_at": "2026-07-03T14:12:47.375379+09:00",
+          "source_lines": 30,
+          "id": "ev-fe092d4a889baf4ea2d6b11b33702e91"
+        },
+        {
+          "kind": "log",
+          "title": "api-gateway proxy ERROR",
+          "text": "2026-07-03T14:03:04.930984+09:00 ERROR [proxy] Upstream 401 from user-service POST /login\n2026-07-03T14:03:19.421908+09:00 ERROR [proxy] Upstream 401 from user-service POST /login\n2026-07-03T14:03:30.410899+09:00 ERROR [proxy] Upstream 401 from user-service POST /login",
+          "source": "scenario/cert_expiry/seed-42/logs/api-gateway/proxy-ERROR.log",
+          "version": "sha256:8b9305e0951f3ef2d61fb024fe79a61aec8a3a9d59b8f80e5c07f1dba925b16f",
+          "locator": "L1-L3",
+          "service": "api-gateway",
+          "teams": [
+            "orders",
+            "platform"
+          ],
+          "origin": "scenario",
+          "incident": "cert_expiry/seed-42",
+          "observed_at": "2026-07-03T14:03:04.930984+09:00",
+          "end_at": "2026-07-03T14:14:42.258961+09:00",
+          "source_lines": 44,
+          "id": "ev-e7c16a7d9a2408a66c4cde55540416f9"
+        }
+      ]
+    },
+    "orders_visible_symptom": {
+      "status": "insufficient_evidence",
+      "hypotheses": [],
+      "cited_evidence": []
+    }
+  }
+}

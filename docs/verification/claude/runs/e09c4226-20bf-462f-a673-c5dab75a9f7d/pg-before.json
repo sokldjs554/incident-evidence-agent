@@ -1,0 +1,207 @@
+{
+  "captured_at": "2026-11-25T09:30:03.159152+00:00",
+  "id": "e09c4226-20bf-462f-a673-c5dab75a9f7d",
+  "team": "platform",
+  "kind": "analysis",
+  "payload": {
+    "seed": 42,
+    "engine": "claude",
+    "callback": true,
+    "question": "배포 이후 주문 서비스의 응답이 느려졌다. 어떤 변경이 관련돼 있나?",
+    "scenario": "db_pool_exhaustion"
+  },
+  "runs": 1,
+  "llm_calls": 2,
+  "status": "completed",
+  "finished_at": "2026-11-25T09:30:02.711788+00:00",
+  "error_code": null,
+  "callback_status": "retrying",
+  "result_sha256": "a36963477fac95226fc5c847374699adf2bd898b5f74d64e7e4590ef75012808",
+  "callbacks": [
+    {
+      "job_id": "e09c4226-20bf-462f-a673-c5dab75a9f7d",
+      "attempt": 1,
+      "status_code": 503,
+      "error": "HTTP 503",
+      "created_at": "2026-11-25T09:30:02.753835+00:00",
+      "finished_at": "2026-11-25T09:30:02.828192+00:00"
+    }
+  ],
+  "receipt": {
+    "job_id": "e09c4226-20bf-462f-a673-c5dab75a9f7d",
+    "digest": "8941de54db3df1e37f5ce8efd48e0019df3eebb644a3f946bb076be90b100e00",
+    "attempts": 1,
+    "accepted_at": null
+  },
+  "trace": {
+    "tool_calls": [
+      {
+        "name": "search_logs",
+        "turn": 1,
+        "index": 0,
+        "query": "주문 서비스 응답 지연 느린 쿼리 latency",
+        "status": "returned",
+        "returned": [
+          {
+            "id": "ev-a70bed5eb45a4e77d9e9516a7c2a65b5",
+            "kind": "log",
+            "source": "scenario/db_pool_exhaustion/seed-42/logs/api-gateway/proxy-ERROR.log",
+            "excerpt": "2026-07-03T14:06:12.485571+09:00 ERROR [proxy] Upstream timeout: order-service GET /orders/ord-59747 exceeded 10000ms, responding 504\n2026-07-03T14:06:17.745199+09:00 ERROR [proxy] Upstream timeout: order-service GET /orders/ord-84870 exceeded 10000ms, responding 504\n2026-07-03T14:06:29.284111+09:00 ERROR [proxy] Upstream timeout: order-service GET /orders/ord-12472 exceeded 10000ms, responding 504",
+            "locator": "L1-L3",
+            "service": "api-gateway",
+            "version": "sha256:e2a050a2aeb2278a9f238832490d439284de986a9303f33e45c174f522045a29"
+          },
+          {
+            "id": "ev-f1b9e3ca0f840c58f84c311f24a0e299",
+            "kind": "log",
+            "source": "scenario/db_pool_exhaustion/seed-42/logs/order-service/db-pool-WARN.log",
+            "excerpt": "2026-07-03T14:02:16.779946+09:00 WARN [db-pool] HikariPool-1 - Connection acquisition time 75ms exceeds warning threshold\n2026-07-03T14:03:20.722011+09:00 WARN [db-pool] HikariPool-1 - Connection acquisition time 174ms exceeds warning threshold\n2026-07-03T14:03:26.958443+09:00 WARN [db-pool] HikariPool-1 - Connection acquisition time 148ms exceeds warning threshold",
+            "locator": "L1-L3",
+            "service": "order-service",
+            "version": "sha256:5418c8edb9adfe8ee1a38c44d5695e78017d703474bbe41f523af10fa761956f"
+          },
+          {
+            "id": "ev-82220ad629f5e662bad2e811ad7bbc59",
+            "kind": "log",
+            "source": "scenario/db_pool_exhaustion/seed-42/logs/mysql/slowlog-WARN.log",
+            "excerpt": "2026-07-03T14:00:07.522146+09:00 WARN [slowlog] Slow query: SELECT * FROM orders WHERE customer_ref = 'cus-1963' (execution time 19.0s)\n2026-07-03T14:00:09.498648+09:00 WARN [slowlog] Slow query: SELECT * FROM orders WHERE customer_ref = 'cus-2920' (execution time 24.9s)\n2026-07-03T14:00:33.864415+09:00 WARN [slowlog] Slow query: SELECT * FROM orders WHERE customer_ref = 'cus-8349' (execution time 21.3s)",
+            "locator": "L1-L3",
+            "service": "mysql",
+            "version": "sha256:b42764e2ba311afdbfc51cc0ecd3cb1e83339b69bde4b4112d7198f63a58cab2"
+          },
+          {
+            "id": "ev-2f62570359029d520d181e97a0f38929",
+            "kind": "log",
+            "source": "scenario/db_pool_exhaustion/seed-42/logs/order-service/db-pool-ERROR.log",
+            "excerpt": "2026-07-03T14:04:04.520069+09:00 ERROR [db-pool] HikariPool-1 - Connection is not available, request timed out after 30000ms\n2026-07-03T14:04:09.375989+09:00 ERROR [db-pool] HikariPool-1 - Connection is not available, request timed out after 30000ms\n2026-07-03T14:04:14.316118+09:00 ERROR [db-pool] HikariPool-1 - Connection is not available, request timed out after 30000ms",
+            "locator": "L1-L3",
+            "service": "order-service",
+            "version": "sha256:baf9e2560c9a0ff804248d24c3d2588fbdc28dc0405c640ffcde964ce573f2e7"
+          }
+        ],
+        "retrieval_decisions": [
+          {
+            "action": "retained",
+            "reason": "이 근거가 속한 서비스와 팀의 열람 권한을 확인했다.",
+            "evidence_id": "ev-a70bed5eb45a4e77d9e9516a7c2a65b5"
+          },
+          {
+            "action": "retained",
+            "reason": "이 근거가 속한 서비스와 팀의 열람 권한을 확인했다.",
+            "evidence_id": "ev-f1b9e3ca0f840c58f84c311f24a0e299"
+          },
+          {
+            "action": "retained",
+            "reason": "이 근거가 속한 서비스와 팀의 열람 권한을 확인했다.",
+            "evidence_id": "ev-82220ad629f5e662bad2e811ad7bbc59"
+          },
+          {
+            "action": "retained",
+            "reason": "이 근거가 속한 서비스와 팀의 열람 권한을 확인했다.",
+            "evidence_id": "ev-2f62570359029d520d181e97a0f38929"
+          }
+        ]
+      },
+      {
+        "name": "search_deployments",
+        "turn": 1,
+        "index": 1,
+        "query": "주문 서비스 최근 배포 변경",
+        "status": "returned",
+        "returned": [
+          {
+            "id": "ev-bbdd9d0bd3a476af204c9fef6342e89b",
+            "kind": "deployment",
+            "source": "scenario/db_pool_exhaustion/seed-42/changes/order-service-1320.txt",
+            "excerpt": "2026-07-03T13:20:00+09:00 deploy order-service v2.4.0 배포 — 주문 조회 쿼리 리팩터링 (customer_ref 조건 추가)",
+            "locator": "L1-L1",
+            "service": "order-service",
+            "version": "sha256:ffc9b80633252c633ad94db39a70f188109bd7ee638318beb906bd6d31d73c63"
+          }
+        ],
+        "retrieval_decisions": [
+          {
+            "action": "retained",
+            "reason": "이 근거가 속한 서비스와 팀의 열람 권한을 확인했다.",
+            "evidence_id": "ev-bbdd9d0bd3a476af204c9fef6342e89b"
+          }
+        ]
+      },
+      {
+        "name": "search_reports",
+        "turn": 1,
+        "index": 2,
+        "query": "주문 서비스 배포 이후 응답 지연 원인 재발 방지",
+        "status": "returned",
+        "returned": [],
+        "retrieval_decisions": []
+      },
+      {
+        "name": "submit_investigation",
+        "turn": 2,
+        "index": 0,
+        "status": "accepted"
+      }
+    ],
+    "submissions": [
+      {
+        "turn": 2,
+        "index": 0,
+        "status": "accepted",
+        "hypotheses": [
+          {
+            "title": "order-service v2.4.0의 customer_ref 조회 쿼리가 느려져 DB 커넥션 풀이 고갈됐을 가능성(추정)",
+            "description": "관찰: 13:20(KST)에 order-service v2.4.0이 배포됐다. 변경 내용은 주문 조회 쿼리 리팩터링이고 customer_ref 조건이 추가됐다. 14:00부터 MySQL 슬로우 로그에 orders를 customer_ref로 조회하는 쿼리가 약 19~25초 걸린 기록이 있다. 14:02~14:03에는 HikariPool 커넥션 획득 시간이 75~174ms로 늘었다는 경고가 있다. 14:04에는 30초 타임아웃으로 커넥션을 얻지 못했다는 오류가 났다. 14:06에는 api-gateway가 order-service GET /orders/{id}에서 10초 초과로 504를 반환했다. 슬로우 쿼리 → 풀 대기 → 게이트웨이 타임아웃 순서로 보면 이 변경이 가장 유력한 후보다. 그러나 배포(13:20)와 첫 슬로우 로그(14:00) 사이가 약 40분이다. 조회한 로그 범위가 14:00부터라 그 이전 상태는 확인하지 못했다. 쿼리가 배포 직후부터 느렸는지, 트래픽 증가나 데이터량 같은 다른 요인이 겹쳤는지는 판단을 보류한다. 게이트웨이가 504를 낸 요청은 /orders/{id}인데, 슬로우 쿼리는 customer_ref 조건이어서 같은 코드 경로인지도 확인하지 못했다. 과거 장애 보고서에서는 관련 사례를 찾지 못해 과거 사례 근거는 없다. 검증에 필요한 관찰: (1) 13:20~14:00 구간의 슬로우 쿼리 수와 지연 추이, (2) 해당 쿼리의 EXPLAIN 결과와 orders.customer_ref 인덱스 유무, (3) 커넥션 풀 사용량과 활성 커넥션 수의 시점별 변화, (4) v2.4.0 롤백 또는 인덱스 추가 후 지연이 해소되는지, (5) 같은 시간대 요청량 변화.",
+            "evidence_ids": [
+              "ev-bbdd9d0bd3a476af204c9fef6342e89b",
+              "ev-82220ad629f5e662bad2e811ad7bbc59",
+              "ev-f1b9e3ca0f840c58f84c311f24a0e299",
+              "ev-2f62570359029d520d181e97a0f38929",
+              "ev-a70bed5eb45a4e77d9e9516a7c2a65b5"
+            ]
+          }
+        ]
+      }
+    ],
+    "provider_attempts": [
+      {
+        "turn": 1,
+        "model": "claude-sonnet-5-5",
+        "usage": {
+          "input_tokens": 1539,
+          "output_tokens": 201,
+          "cache_read_input_tokens": 0,
+          "cache_creation_input_tokens": 0
+        },
+        "status": "returned",
+        "attempt": 1,
+        "message_id": "msg_011ChPQppXdXd3xoVjR7sa6z",
+        "request_id": "req_011ChPQpp8KUhrtVQ3URHD9F",
+        "started_at": "2026-11-25T09:29:50.383937+00:00",
+        "finished_at": "2026-11-25T09:29:52.518175+00:00",
+        "stop_reason": "tool_use",
+        "provider_endpoint": "api.anthropic.com"
+      },
+      {
+        "turn": 2,
+        "model": "claude-sonnet-5-5",
+        "usage": {
+          "input_tokens": 5432,
+          "output_tokens": 1171,
+          "cache_read_input_tokens": 0,
+          "cache_creation_input_tokens": 0
+        },
+        "status": "returned",
+        "attempt": 1,
+        "message_id": "msg_011ChPQq36fnKiUrzAkzzzco",
+        "request_id": "req_011ChPQq2yyY9Lzd3qPGZNaz",
+        "started_at": "2026-11-25T09:29:53.424894+00:00",
+        "finished_at": "2026-11-25T09:30:02.708367+00:00",
+        "stop_reason": "tool_use",
+        "provider_endpoint": "api.anthropic.com"
+      }
+    ],
+    "omitted_tool_calls": 0,
+    "omitted_submissions": 0
+  }
+}

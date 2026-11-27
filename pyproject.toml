@@ -1,0 +1,38 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "fivewhys-agent"
+version = "0.2.0"
+description = "Five Whys Agent — LLM 에이전트 기반 장애 로그 근본원인분석(RCA) 자동화"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [{ name = "sokldjs554" }]
+dependencies = [
+    "anthropic>=0.40",
+    "pydantic>=2.5",
+    "numpy>=1.26",
+    "fastapi>=0.110",
+    "uvicorn>=0.27",
+]
+
+[project.optional-dependencies]
+incident = ["langchain-core>=0.3,<2", "pymilvus>=2.5.10,<2.7", "neo4j>=5.26,<7", "psycopg[binary]>=3.2,<4", "pika>=1.3,<2", "httpx>=0.27,<1"]
+mcp = ["mcp>=1.2"]
+es = ["elasticsearch>=8.12,<9"]
+dev = ["fivewhys-agent[incident]", "pytest>=8", "httpx>=0.27"]
+
+[project.scripts]
+fivewhys = "fivewhys.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+fivewhys = ["data/postmortems/*.md", "web/*", "data/investigation/*", "evaluation/*.json"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"

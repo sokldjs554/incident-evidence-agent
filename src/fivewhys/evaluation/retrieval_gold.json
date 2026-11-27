@@ -1,0 +1,98 @@
+[
+  {
+    "name": "default_order_latency",
+    "team": "orders",
+    "question": "배포 이후 주문 서비스의 응답이 느려졌다. 어떤 변경이 관련돼 있나?",
+    "relevant": [
+      [
+        "scenario/db_pool_exhaustion/seed-42/changes/order-service-1320.txt",
+        "L1-L1"
+      ],
+      [
+        "scenario/db_pool_exhaustion/seed-42/logs/order-service/db-pool-WARN.log",
+        "L1-L3"
+      ]
+    ],
+    "asks_for_culprit_change": true
+  },
+  {
+    "name": "gateway_to_change",
+    "team": "orders",
+    "question": "api-gateway Upstream timeout 504 exceeded 10000ms와 관련된 이번 변경은?",
+    "relevant": [
+      [
+        "scenario/db_pool_exhaustion/seed-42/logs/api-gateway/proxy-ERROR.log",
+        "L1-L3"
+      ],
+      [
+        "scenario/db_pool_exhaustion/seed-42/changes/order-service-1320.txt",
+        "L1-L1"
+      ]
+    ],
+    "asks_for_culprit_change": true
+  },
+  {
+    "name": "pool_error",
+    "team": "orders",
+    "question": "HikariPool-1 Connection is not available request timed out after 30000ms 원문",
+    "relevant": [
+      [
+        "scenario/db_pool_exhaustion/seed-42/logs/order-service/db-pool-ERROR.log",
+        "L1-L3"
+      ]
+    ],
+    "asks_for_culprit_change": false
+  },
+  {
+    "name": "db_query",
+    "team": "platform",
+    "question": "Slow query SELECT orders WHERE customer_ref execution time의 실제 실행 로그",
+    "relevant": [
+      [
+        "scenario/db_pool_exhaustion/seed-42/logs/mysql/slowlog-WARN.log",
+        "L1-L3"
+      ]
+    ],
+    "asks_for_culprit_change": false
+  },
+  {
+    "name": "circuit_to_change",
+    "team": "platform",
+    "question": "왜 api-gateway Circuit breaker OPEN for order-service가 발생했는지 장애 로그와 선행 변경을 찾아줘",
+    "relevant": [
+      [
+        "scenario/db_pool_exhaustion/seed-42/logs/api-gateway/circuit-WARN.log",
+        "L1-L3"
+      ],
+      [
+        "scenario/db_pool_exhaustion/seed-42/changes/order-service-1320.txt",
+        "L1-L1"
+      ]
+    ],
+    "asks_for_culprit_change": true
+  },
+  {
+    "name": "historical_plan",
+    "team": "orders",
+    "question": "2025 주문 API 커넥션 풀 고갈 재발 방지 대책 EXPLAIN 자동 검토",
+    "relevant": [
+      [
+        "postmortems/2025-11-14-db-connection-pool.md",
+        "L32-L36"
+      ]
+    ],
+    "asks_for_culprit_change": false
+  },
+  {
+    "name": "rollout_record",
+    "team": "orders",
+    "question": "order-service v2.4.0 배포 주문 조회 쿼리 리팩터링 customer_ref 기록",
+    "relevant": [
+      [
+        "scenario/db_pool_exhaustion/seed-42/changes/order-service-1320.txt",
+        "L1-L1"
+      ]
+    ],
+    "asks_for_culprit_change": true
+  }
+]
